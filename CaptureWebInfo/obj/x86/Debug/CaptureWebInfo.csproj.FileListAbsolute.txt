@@ -8,3 +8,13 @@ G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebIn
 G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csprojResolveAssemblyReference.cache
 G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\SEOHelper.dll
 G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\SEOHelper.pdb
+F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.exe
+F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.pdb
+F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\CaptureWebInfo.exe
+F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\CaptureWebInfo.pdb
+F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\SEOHelper.dll
+F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\SEOHelper.pdb
+F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csprojResolveAssemblyReference.cache
+F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.Form1.resources
+F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.Properties.Resources.resources
+F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csproj.GenerateResource.Cache

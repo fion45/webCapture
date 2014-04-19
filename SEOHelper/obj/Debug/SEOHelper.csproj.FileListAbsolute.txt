@@ -2,3 +2,8 @@ G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\bin\Debug\SEOHelper.dll
 G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\bin\Debug\SEOHelper.pdb
 G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\obj\Debug\SEOHelper.dll
 G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\obj\Debug\SEOHelper.pdb
+F:\C#.NET\WebCapture\SEOHelper\bin\Debug\SEOHelper.dll
+F:\C#.NET\WebCapture\SEOHelper\bin\Debug\SEOHelper.pdb
+F:\C#.NET\WebCapture\SEOHelper\obj\Debug\SEOHelper.csprojResolveAssemblyReference.cache
+F:\C#.NET\WebCapture\SEOHelper\obj\Debug\SEOHelper.dll
+F:\C#.NET\WebCapture\SEOHelper\obj\Debug\SEOHelper.pdb
