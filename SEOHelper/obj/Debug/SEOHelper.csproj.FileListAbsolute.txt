@@ -1,0 +1,4 @@
+G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\bin\Debug\SEOHelper.dll
+G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\bin\Debug\SEOHelper.pdb
+G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\obj\Debug\SEOHelper.dll
+G:\C#net\CaptureWebInfo\CaptureWebInfo\SEOHelper\obj\Debug\SEOHelper.pdb

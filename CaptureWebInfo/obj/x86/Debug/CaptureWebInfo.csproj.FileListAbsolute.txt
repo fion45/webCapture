@@ -1,0 +1,10 @@
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\CaptureWebInfo.exe
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\CaptureWebInfo.pdb
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.Form1.resources
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.Properties.Resources.resources
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csproj.GenerateResource.Cache
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.exe
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.pdb
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csprojResolveAssemblyReference.cache
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\SEOHelper.dll
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\SEOHelper.pdb
