@@ -135,18 +135,12 @@ namespace SEOHelper
             Regex completeHeadTag = new Regex(COMPLETEHEADTAG,RegexOptions.IgnoreCase);
             Regex comEndTag = new Regex(COMENDTAG, RegexOptions.IgnoreCase);
             Regex nextLevelTag = new Regex(NEXTLEVELTAG, RegexOptions.IgnoreCase);
-            Match tmpMatch = completeHeadTag.Match(urlStr);
-            if(!string.IsNullOrEmpty(tmpMatch.Value))
-            {
-                if(string.IsNullOrEmpty(tmpMatch.Groups[1].Value) && string.IsNullOrEmpty(tmpMatch.Groups[2].Value))
-                {
-                    urlStr = "http://" + urlStr;
-                }
-            }
+            if (!completeHeadTag.IsMatch(urlStr))
+                urlStr = "http://" + urlStr;
             else
             {
-                string tmpStr = forwardTag.Match(urlStr).Value;
-                tmpMatch = comEndTag.Match(parUrlStr);
+                string tmpStr = headwardTag.Match(urlStr).Value;
+                Match tmpMatch = comEndTag.Match(parUrlStr);
                 if (!string.IsNullOrEmpty(tmpStr))
                 {
                     urlStr = parUrlStr.Substring(0, tmpMatch.Index) + urlStr.Substring(1);
@@ -161,13 +155,16 @@ namespace SEOHelper
                         tmpMatch = forwardTag.Match(urlStr);
                         ++index;
                     }
-                    for(int i=0;i<index;i++)
+                    if (index != 0)
                     {
-                        if (!nextLevelTag.IsMatch(parUrlStr))
-                            return false;
-                        parUrlStr = nextLevelTag.Replace(parUrlStr, "");
+                        for (int i = 0; i < index; i++)
+                        {
+                            if (!nextLevelTag.IsMatch(parUrlStr))
+                                return false;
+                            parUrlStr = nextLevelTag.Replace(parUrlStr, "");
+                        }
+                        urlStr = parUrlStr + "/" + urlStr.TrimStart(new char[] { '/' });
                     }
-                    urlStr = parUrlStr + "/" + urlStr.TrimStart(new char[]{'/'});
                 }
             }
             return true;

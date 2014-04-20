@@ -12,7 +12,8 @@ namespace SEOHelper
         {
             Init,
             Visiting,
-            Visited
+            Success,
+            Failure
         }
         public string mUrl;
         public Visitor mParent;
@@ -23,19 +24,25 @@ namespace SEOHelper
 
     public class VisitorManager
     {
-        private Queue<Visitor> mVisitorArr;
+        public HashSet<string> mUrlSet;
+        public List<Visitor> mVisitorArr;
+        private Queue<Visitor> mInitVisitorArr;
         private Queue<Visitor> mHasVisitedArr;
         public ManualResetEvent mEvent;
 
         public VisitorManager()
         {
             mEvent = new ManualResetEvent(false);
-            mVisitorArr = new Queue<Visitor>();
+            mUrlSet = new HashSet<string>();
+            mVisitorArr = new List<Visitor>(1024);
+            mInitVisitorArr = new Queue<Visitor>();
             mHasVisitedArr = new Queue<Visitor>();
         }
 
-        public void AddVisitor(string url,Visitor parVisitor)
+        public bool AddVisitor(string url,Visitor parVisitor)
         {
+            if (mUrlSet.Contains(url))      //不添加重复的
+                return false;
             Visitor visitor = new Visitor() {
                 mUrl = url,
                 mParent = parVisitor,
@@ -43,33 +50,43 @@ namespace SEOHelper
                 mContent = null,
                 mContentLen = 0
             };
-            Monitor.Enter(mVisitorArr);
-            mVisitorArr.Enqueue(visitor);
+            mUrlSet.Add(url);
+            mVisitorArr.Add(visitor);
+            Monitor.Enter(mInitVisitorArr);
+            mInitVisitorArr.Enqueue(visitor);
             mEvent.Set();
-            Monitor.Exit(mVisitorArr);
+            Monitor.Exit(mInitVisitorArr);
+            return true;
         }
 
         public bool HasFinished()
         {
-            return mVisitorArr.Count == 0;
+            return mInitVisitorArr.Count == 0;
         }
 
         public Visitor GetInitVisitor()
         {
-            Monitor.Enter(mVisitorArr);
-            Visitor result = mVisitorArr.Dequeue();
-            if (mVisitorArr.Count == 0)
+            Monitor.Enter(mInitVisitorArr);
+            Visitor result = mInitVisitorArr.Dequeue();
+            if (mInitVisitorArr.Count == 0)
                 mEvent.Reset();
-            Monitor.Exit(mVisitorArr);
+            Monitor.Exit(mInitVisitorArr);
             return result;
         }
 
-        public void FinishVisit(Visitor visitor)
+        public void FinishVisit(Visitor visitor,bool sTag = true)
         {
             Monitor.Enter(mHasVisitedArr);
-            visitor.mStatus = Visitor.EVisitStatus.Visited;
+            visitor.mStatus = sTag ? Visitor.EVisitStatus.Success : Visitor.EVisitStatus.Success;
             mHasVisitedArr.Enqueue(visitor);
             Monitor.Exit(mHasVisitedArr);
+        }
+
+        public void GetArrCount(out int totalCount, out int waitCount, out int finishCount)
+        {
+            totalCount = mVisitorArr.Count();
+            finishCount = mHasVisitedArr.Count();
+            waitCount = totalCount - finishCount;
         }
     }
 }
