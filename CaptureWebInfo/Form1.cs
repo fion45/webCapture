@@ -54,8 +54,10 @@ namespace CaptureWebInfo
             //TODO:正则判断urlTB是否是网址格式
             string tmpStr = urlTB.Text;
             Regex completeHeadTag = new Regex(Analyzer.COMPLETEHEADTAG,RegexOptions.IgnoreCase);
+            Regex haveCom = new Regex(Analyzer.HAVECOM, RegexOptions.IgnoreCase);
+            Regex haveCn = new Regex(Analyzer.HAVECN, RegexOptions.IgnoreCase);
             Match tmpMatch = completeHeadTag.Match(tmpStr);
-            if (!completeHeadTag.IsMatch(tmpStr))
+            if ((haveCom.IsMatch(tmpStr) || haveCn.IsMatch(tmpStr)) && !completeHeadTag.IsMatch(tmpStr))
                 tmpStr = "http://" + tmpStr;
             urlTB.Text = tmpStr;
             switch(tabView.SelectedIndex) {

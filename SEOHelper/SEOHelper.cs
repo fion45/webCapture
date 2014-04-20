@@ -111,6 +111,7 @@ namespace SEOHelper
                                 //补全网址
                                 if (!Analyzer.FillUrlString(ref tmpUrlStr, tmpVisitor.mUrl))
                                     break;
+                                Console.WriteLine(tmpUrlStr);
                                 if (CheckUrl(tmpUrlStr))
                                     mVManager.AddVisitor(tmpUrlStr, tmpVisitor);
                                 break;

@@ -38,6 +38,16 @@
             this.nodeTV = new System.Windows.Forms.TreeView();
             this.wbView = new System.Windows.Forms.WebBrowser();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.SHCB = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.AETB = new System.Windows.Forms.TextBox();
+            this.TCLB = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.FCLB = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.WFCLB = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.threadCountLB = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.urlLV = new System.Windows.Forms.ListView();
@@ -45,16 +55,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.urlTB = new System.Windows.Forms.TextBox();
             this.Go = new System.Windows.Forms.Button();
-            this.WFCLB = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.FCLB = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.TCLB = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.AETB = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.SHCB = new System.Windows.Forms.CheckBox();
             this.tabView.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -187,6 +187,99 @@
             this.tabPage2.Text = "操作";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // SHCB
+            // 
+            this.SHCB.AutoSize = true;
+            this.SHCB.Location = new System.Drawing.Point(540, 36);
+            this.SHCB.Name = "SHCB";
+            this.SHCB.Size = new System.Drawing.Size(84, 16);
+            this.SHCB.TabIndex = 14;
+            this.SHCB.Text = "同一个域名";
+            this.SHCB.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(538, 64);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(113, 12);
+            this.label7.TabIndex = 13;
+            this.label7.Text = "满足的正则表达式：";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(536, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 12);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "地址规则";
+            // 
+            // AETB
+            // 
+            this.AETB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AETB.Location = new System.Drawing.Point(538, 79);
+            this.AETB.Multiline = true;
+            this.AETB.Name = "AETB";
+            this.AETB.Size = new System.Drawing.Size(316, 108);
+            this.AETB.TabIndex = 11;
+            this.AETB.Text = "usashopcn\r\nProduct/List/Category=\\\\d+";
+            // 
+            // TCLB
+            // 
+            this.TCLB.AutoSize = true;
+            this.TCLB.Location = new System.Drawing.Point(439, 9);
+            this.TCLB.Name = "TCLB";
+            this.TCLB.Size = new System.Drawing.Size(11, 12);
+            this.TCLB.TabIndex = 10;
+            this.TCLB.Text = "0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(392, 9);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(41, 12);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "总数：";
+            // 
+            // FCLB
+            // 
+            this.FCLB.AutoSize = true;
+            this.FCLB.Location = new System.Drawing.Point(323, 9);
+            this.FCLB.Name = "FCLB";
+            this.FCLB.Size = new System.Drawing.Size(11, 12);
+            this.FCLB.TabIndex = 8;
+            this.FCLB.Text = "0";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(264, 9);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.TabIndex = 7;
+            this.label9.Text = "已完成：";
+            // 
+            // WFCLB
+            // 
+            this.WFCLB.AutoSize = true;
+            this.WFCLB.Location = new System.Drawing.Point(199, 9);
+            this.WFCLB.Name = "WFCLB";
+            this.WFCLB.Size = new System.Drawing.Size(11, 12);
+            this.WFCLB.TabIndex = 4;
+            this.WFCLB.Text = "0";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(152, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(41, 12);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "待读：";
+            // 
             // threadCountLB
             // 
             this.threadCountLB.AutoSize = true;
@@ -255,98 +348,6 @@
             this.Go.Text = "Go";
             this.Go.UseVisualStyleBackColor = true;
             this.Go.Click += new System.EventHandler(this.Go_Click);
-            // 
-            // WFCLB
-            // 
-            this.WFCLB.AutoSize = true;
-            this.WFCLB.Location = new System.Drawing.Point(199, 9);
-            this.WFCLB.Name = "WFCLB";
-            this.WFCLB.Size = new System.Drawing.Size(11, 12);
-            this.WFCLB.TabIndex = 4;
-            this.WFCLB.Text = "0";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(152, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 12);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "待读：";
-            // 
-            // FCLB
-            // 
-            this.FCLB.AutoSize = true;
-            this.FCLB.Location = new System.Drawing.Point(323, 9);
-            this.FCLB.Name = "FCLB";
-            this.FCLB.Size = new System.Drawing.Size(11, 12);
-            this.FCLB.TabIndex = 8;
-            this.FCLB.Text = "0";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(264, 9);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(53, 12);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "已完成：";
-            // 
-            // TCLB
-            // 
-            this.TCLB.AutoSize = true;
-            this.TCLB.Location = new System.Drawing.Point(439, 9);
-            this.TCLB.Name = "TCLB";
-            this.TCLB.Size = new System.Drawing.Size(11, 12);
-            this.TCLB.TabIndex = 10;
-            this.TCLB.Text = "0";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(392, 9);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(41, 12);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "总数：";
-            // 
-            // AETB
-            // 
-            this.AETB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AETB.Location = new System.Drawing.Point(538, 79);
-            this.AETB.Multiline = true;
-            this.AETB.Name = "AETB";
-            this.AETB.Size = new System.Drawing.Size(316, 108);
-            this.AETB.TabIndex = 11;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(536, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(53, 12);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "地址规则";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(538, 64);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 12);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "满足的正则表达式：";
-            // 
-            // SHCB
-            // 
-            this.SHCB.AutoSize = true;
-            this.SHCB.Location = new System.Drawing.Point(540, 36);
-            this.SHCB.Name = "SHCB";
-            this.SHCB.Size = new System.Drawing.Size(84, 16);
-            this.SHCB.TabIndex = 14;
-            this.SHCB.Text = "同一个域名";
-            this.SHCB.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

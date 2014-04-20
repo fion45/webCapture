@@ -18,6 +18,8 @@ namespace SEOHelper
         public static string COMENDTAG = "(?<=.com).*";
         public static string NEXTLEVELTAG = "/.+$";
         public static string JAVATAG = "^javascript:";
+        public static string HAVECOM = ".+\\.com";
+        public static string HAVECN = ".+\\.cn";
 
         public static string GetTagRegexStr(string tagName)
         {
@@ -135,10 +137,16 @@ namespace SEOHelper
             Regex completeHeadTag = new Regex(COMPLETEHEADTAG,RegexOptions.IgnoreCase);
             Regex comEndTag = new Regex(COMENDTAG, RegexOptions.IgnoreCase);
             Regex nextLevelTag = new Regex(NEXTLEVELTAG, RegexOptions.IgnoreCase);
-            if (!completeHeadTag.IsMatch(urlStr))
+            Regex haveCom = new Regex(HAVECOM, RegexOptions.IgnoreCase);
+            Regex haveCn = new Regex(HAVECN, RegexOptions.IgnoreCase);
+            if ((haveCom.IsMatch(urlStr) || haveCn.IsMatch(urlStr)) && !completeHeadTag.IsMatch(urlStr))
+            {
                 urlStr = "http://" + urlStr;
+            }
             else
             {
+                if (completeHeadTag.IsMatch(urlStr))
+                    return true;
                 string tmpStr = headwardTag.Match(urlStr).Value;
                 Match tmpMatch = comEndTag.Match(parUrlStr);
                 if (!string.IsNullOrEmpty(tmpStr))
@@ -149,22 +157,19 @@ namespace SEOHelper
                 {
                     tmpMatch = forwardTag.Match(urlStr);
                     int index = 0;
-                    while(!string.IsNullOrEmpty(tmpMatch.Value))
+                    while (!string.IsNullOrEmpty(tmpMatch.Value))
                     {
                         urlStr = urlStr.Substring(tmpMatch.Value.Length);
                         tmpMatch = forwardTag.Match(urlStr);
                         ++index;
                     }
-                    if (index != 0)
+                    for (int i = 0; i < index; i++)
                     {
-                        for (int i = 0; i < index; i++)
-                        {
-                            if (!nextLevelTag.IsMatch(parUrlStr))
-                                return false;
-                            parUrlStr = nextLevelTag.Replace(parUrlStr, "");
-                        }
-                        urlStr = parUrlStr + "/" + urlStr.TrimStart(new char[] { '/' });
+                        if (!nextLevelTag.IsMatch(parUrlStr))
+                            return false;
+                        parUrlStr = nextLevelTag.Replace(parUrlStr, "");
                     }
+                    urlStr = parUrlStr + "/" + urlStr.TrimStart(new char[] { '/' });
                 }
             }
             return true;
