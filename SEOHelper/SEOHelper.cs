@@ -13,8 +13,10 @@ namespace SEOHelper
     public class CSEOHelper
     {
         public delegate bool CheckUrlCB(string url);
+        public delegate void DealWithContentCB(Visitor visitor, string responseStr);
 
         private CheckUrlCB mCUCB;
+        private DealWithContentCB mDWCCB;
 
         public enum EHelperStatus
         {
@@ -41,9 +43,10 @@ namespace SEOHelper
         //    Stop();
         //}
 
-        public void Start(string url,CheckUrlCB cuCB = null)
+        public void Start(string url,CheckUrlCB cuCB = null,DealWithContentCB dwcCB = null)
         {
             mCUCB = cuCB;
+            mDWCCB = dwcCB;
             mContinue.Set();
             mRunStatus = EHelperStatus.Running;
             ThreadPool.QueueUserWorkItem(RunCallback);
@@ -89,7 +92,12 @@ namespace SEOHelper
                 Stream streamResponse = response.GetResponseStream();
                 StreamReader streamRead = new StreamReader(streamResponse);
                 string responseString = streamRead.ReadToEnd();
-                //找出<a> 和 需要的内容
+
+                //调用回调函数处理内容
+                if (mDWCCB != null)
+                    mDWCCB(tmpVisitor, responseString);
+
+                //找出<a>
                 List<string> tmpList = Analyzer.GetHtmlNode(responseString, "a");
                 Regex urlRgx = new Regex(Analyzer.GetPropertyRegexStr("href"),RegexOptions.IgnoreCase);
                 Regex StartTagRgx = new Regex(Analyzer.STRSTARTTAG);
@@ -119,6 +127,7 @@ namespace SEOHelper
                         }
                     }
                 }
+
                 successTag = true;
 
                 // Close the stream object
@@ -133,7 +142,7 @@ namespace SEOHelper
             catch(Exception ex)
             {
                 successTag = false;
-                string EStr = string.Format("{0} [{1}]", tmpVisitor.mUrl, ex.Message);
+                string EStr = string.Format("Error:{0} [{1}]", tmpVisitor.mUrl, ex.Message);
                 Console.WriteLine(EStr);
 
             }

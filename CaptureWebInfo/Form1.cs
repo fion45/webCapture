@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.IO;
 using mshtml;
 using SEOHelper;
 
@@ -17,6 +18,10 @@ namespace CaptureWebInfo
         private CSEOHelper mSEOHelper = new CSEOHelper();
         private Timer mTimer = new Timer();
         private int mLVIndex = 0;
+
+        //Test
+        private List<MemoryStream> mSList = new List<MemoryStream>();
+        private List<string[]> mRgxStrList = new List<string[]>();
 
         public Form1()
         {
@@ -47,6 +52,13 @@ namespace CaptureWebInfo
             }
             mLVIndex += i;
             urlLV.Items.AddRange(tmpArr.ToArray());
+            if (wc == 0)
+            {
+                //已完成
+                mSEOHelper.Stop();
+                mTimer.Stop();
+                MessageBox.Show("have completed");
+            }
         }
 
         private void Go_Click(object sender, EventArgs e)
@@ -54,10 +66,8 @@ namespace CaptureWebInfo
             //TODO:正则判断urlTB是否是网址格式
             string tmpStr = urlTB.Text;
             Regex completeHeadTag = new Regex(Analyzer.COMPLETEHEADTAG,RegexOptions.IgnoreCase);
-            Regex haveCom = new Regex(Analyzer.HAVECOM, RegexOptions.IgnoreCase);
-            Regex haveCn = new Regex(Analyzer.HAVECN, RegexOptions.IgnoreCase);
             Match tmpMatch = completeHeadTag.Match(tmpStr);
-            if ((haveCom.IsMatch(tmpStr) || haveCn.IsMatch(tmpStr)) && !completeHeadTag.IsMatch(tmpStr))
+            if (!completeHeadTag.IsMatch(tmpStr))
                 tmpStr = "http://" + tmpStr;
             urlTB.Text = tmpStr;
             switch(tabView.SelectedIndex) {
@@ -66,8 +76,20 @@ namespace CaptureWebInfo
                     wbView.Url = new Uri(tmpStr);
                     break;
                 case 1:
-                    mSEOHelper.Start(tmpStr, CheckUrlCB);
+                    mSEOHelper.Start(tmpStr, CheckUrlCB, DealWithContentCB);
                     mTimer.Start();
+                    mSList.Clear();
+                    mRgxStrList.Clear();
+                    tmpStr = ContentTB.Text;
+                    string[] tSArr = tmpStr.Split(new char[] { '|' });
+                    foreach (string tmpS in tSArr)
+                    {
+                        string[] tmpSArr = tmpS.Split(new char[] { ';' });
+                        if (tmpSArr.Length < 2)
+                            continue;
+                        mRgxStrList.Add(tmpSArr);
+                        mSList.Add(new MemoryStream());
+                    }
                     break;
                 case 2:
                     break;
@@ -169,11 +191,37 @@ namespace CaptureWebInfo
             string[] tmpSArr = tmpStr.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach(string tmpS in tmpSArr)
             {
-                Regex tmpRgx = new Regex(tmpS);
+                Regex tmpRgx = new Regex(tmpS,RegexOptions.IgnoreCase);
                 if (!tmpRgx.IsMatch(url))
                     return false;
             }
             return true;
+        }
+
+        public void DealWithContentCB(Visitor visitor,string response)
+        {
+            for(int i=0;i<mRgxStrList.Count;i++)
+            {
+                string[] tmpStrArr = mRgxStrList[i];
+                Regex mRgx = new Regex(tmpStrArr[0]);
+                if (mRgx.IsMatch(visitor.mUrl))
+                {
+                    for (int j = 1; j < tmpStrArr.Length; j++)
+                    {
+                        Regex cRgx = new Regex(tmpStrArr[j],RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                        MatchCollection MC2 = cRgx.Matches(response);
+                        foreach (Match m2 in MC2)
+                        {
+                            for (int k = 0; k < m2.Groups.Count; k++)
+                            {
+                                byte[] tmpBuffer = Encoding.Unicode.GetBytes(m2.Groups[k].Value);
+                                mSList[i].Write(tmpBuffer, 0, tmpBuffer.Length);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

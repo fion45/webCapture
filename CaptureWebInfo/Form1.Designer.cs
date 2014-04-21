@@ -38,6 +38,8 @@
             this.nodeTV = new System.Windows.Forms.TreeView();
             this.wbView = new System.Windows.Forms.WebBrowser();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.ContentTB = new System.Windows.Forms.TextBox();
             this.SHCB = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -166,6 +168,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.ContentTB);
             this.tabPage2.Controls.Add(this.SHCB);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label4);
@@ -187,6 +191,28 @@
             this.tabPage2.Text = "操作";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(541, 197);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(305, 12);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "获取内容规则（[url正则;内容1正则;内容2正则...]）：";
+            // 
+            // ContentTB
+            // 
+            this.ContentTB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ContentTB.Location = new System.Drawing.Point(540, 212);
+            this.ContentTB.Multiline = true;
+            this.ContentTB.Name = "ContentTB";
+            this.ContentTB.Size = new System.Drawing.Size(314, 338);
+            this.ContentTB.TabIndex = 15;
+            this.ContentTB.Text = "/Product/List/\\?category=\\d+;<div[^<]*?\\sid\\s*=\\s*\\\"*currentPlace\\\"*[^<>]+?>[^<>]" +
+    "*?(<a\\s[^<>]+?>([^<>]+?)</a>[^<>]*)+?</div>|/Product/Details/\\d+;";
+            // 
             // SHCB
             // 
             this.SHCB.AutoSize = true;
@@ -202,9 +228,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(538, 64);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 12);
+            this.label7.Size = new System.Drawing.Size(131, 12);
             this.label7.TabIndex = 13;
-            this.label7.Text = "满足的正则表达式：";
+            this.label7.Text = "URL满足的正则表达式：";
             // 
             // label4
             // 
@@ -224,7 +250,7 @@
             this.AETB.Name = "AETB";
             this.AETB.Size = new System.Drawing.Size(316, 108);
             this.AETB.TabIndex = 11;
-            this.AETB.Text = "usashopcn\r\nProduct/List/Category=\\\\d+";
+            this.AETB.Text = "product";
             // 
             // TCLB
             // 
@@ -400,6 +426,8 @@
         private System.Windows.Forms.TextBox AETB;
         private System.Windows.Forms.CheckBox SHCB;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox ContentTB;
     }
 }
 

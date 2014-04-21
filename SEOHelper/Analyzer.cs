@@ -18,8 +18,7 @@ namespace SEOHelper
         public static string COMENDTAG = "(?<=.com).*";
         public static string NEXTLEVELTAG = "/.+$";
         public static string JAVATAG = "^javascript:";
-        public static string HAVECOM = ".+\\.com";
-        public static string HAVECN = ".+\\.cn";
+        public static string ROOTTAG = "^https*://+(([0-9a-zA-Z])+\\.)+\\w+";
 
         public static string GetTagRegexStr(string tagName)
         {
@@ -36,7 +35,7 @@ namespace SEOHelper
         public static List<Match> GetSpecifyString(string content, string regex)
         {
             List<Match> result = new List<Match>();
-            Regex tmpRgx = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            Regex tmpRgx = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             MatchCollection tmpMC = tmpRgx.Matches(content);
             foreach (Match match in tmpMC)
             {
@@ -49,7 +48,7 @@ namespace SEOHelper
         {
             foreach (KeyValuePair<string, List<Match>> pair in regexDic)
             {
-                Regex tmpRgx = new Regex(pair.Key, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+                Regex tmpRgx = new Regex(pair.Key, RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 MatchCollection tmpMC = tmpRgx.Matches(content);
                 foreach (Match match in tmpMC)
                 {
@@ -67,7 +66,7 @@ namespace SEOHelper
             //竟然有<img xzzz>这些没有结束符的标签，郁闷
             //解决办法，先去除这些
             int index = replaceStrArr.Count;
-            Regex notRgx = new Regex(NOTHAVEENDTAG, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            Regex notRgx = new Regex(NOTHAVEENDTAG, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             MatchCollection tmpMC = notRgx.Matches(content);
             int tmpDC = 0;
             foreach (Match match in tmpMC)
@@ -79,7 +78,7 @@ namespace SEOHelper
                 ++index;
             }
 
-            Regex getRgx = new Regex("<(" + tagName + ")[^<]+<?/\\1?>", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            Regex getRgx = new Regex("<(" + tagName + ")[^<]+<?/\\1?>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
             List<string> result = new List<string>();
             Match tmpMatch = getRgx.Match(content);
             while (tmpMatch.Success)
@@ -89,7 +88,7 @@ namespace SEOHelper
                 result.Add(tmpStr);
                 tmpMatch = tmpMatch.NextMatch();
             }
-            Regex nodeRgx = new Regex(NODERGXSTR, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            Regex nodeRgx = new Regex(NODERGXSTR, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             tmpMC = nodeRgx.Matches(content);
             tmpDC = 0;
             foreach (Match match in tmpMC)
@@ -130,46 +129,58 @@ namespace SEOHelper
         public static bool FillUrlString(ref string urlStr,string parUrlStr)
         {
             Regex javaTag = new Regex(JAVATAG,RegexOptions.IgnoreCase);
-            if (urlStr == "#" || urlStr == "/" || javaTag.IsMatch(urlStr))
+            if (urlStr[0] == '#' || urlStr == "/" || javaTag.IsMatch(urlStr))
                 return false;
             Regex headwardTag = new Regex(HEADWARDTAG, RegexOptions.IgnoreCase);
             Regex forwardTag = new Regex(FORWARDTAG, RegexOptions.IgnoreCase);
             Regex completeHeadTag = new Regex(COMPLETEHEADTAG,RegexOptions.IgnoreCase);
             Regex comEndTag = new Regex(COMENDTAG, RegexOptions.IgnoreCase);
             Regex nextLevelTag = new Regex(NEXTLEVELTAG, RegexOptions.IgnoreCase);
-            Regex haveCom = new Regex(HAVECOM, RegexOptions.IgnoreCase);
-            Regex haveCn = new Regex(HAVECN, RegexOptions.IgnoreCase);
-            if ((haveCom.IsMatch(urlStr) || haveCn.IsMatch(urlStr)) && !completeHeadTag.IsMatch(urlStr))
+            Regex rootTag = new Regex(ROOTTAG,RegexOptions.IgnoreCase);
+            if (!completeHeadTag.IsMatch(urlStr) && urlStr[0] != '/' && !headwardTag.IsMatch(urlStr) && !forwardTag.IsMatch(urlStr))
             {
                 urlStr = "http://" + urlStr;
             }
             else
             {
-                if (completeHeadTag.IsMatch(urlStr))
-                    return true;
-                string tmpStr = headwardTag.Match(urlStr).Value;
-                Match tmpMatch = comEndTag.Match(parUrlStr);
-                if (!string.IsNullOrEmpty(tmpStr))
+                if (urlStr[0] == '/')
                 {
-                    urlStr = parUrlStr.Substring(0, tmpMatch.Index) + urlStr.Substring(1);
+                    //全局相对路径
+                    Match rMatch = rootTag.Match(parUrlStr);
+                    urlStr = rMatch.Value + urlStr;
+                }
+                else if(urlStr[0] == '?')
+                {
+                    urlStr = parUrlStr.TrimEnd(new char[] { '/' }) + urlStr;
                 }
                 else
                 {
-                    tmpMatch = forwardTag.Match(urlStr);
-                    int index = 0;
-                    while (!string.IsNullOrEmpty(tmpMatch.Value))
+                    if (completeHeadTag.IsMatch(urlStr))
+                        return true;
+                    string tmpStr = headwardTag.Match(urlStr).Value;
+                    Match tmpMatch = comEndTag.Match(parUrlStr);
+                    if (!string.IsNullOrEmpty(tmpStr))
                     {
-                        urlStr = urlStr.Substring(tmpMatch.Value.Length);
+                        urlStr = parUrlStr.Substring(0, tmpMatch.Index) + urlStr.Substring(1);
+                    }
+                    else
+                    {
                         tmpMatch = forwardTag.Match(urlStr);
-                        ++index;
+                        int index = 0;
+                        while (!string.IsNullOrEmpty(tmpMatch.Value))
+                        {
+                            urlStr = urlStr.Substring(tmpMatch.Value.Length);
+                            tmpMatch = forwardTag.Match(urlStr);
+                            ++index;
+                        }
+                        for (int i = 0; i < index; i++)
+                        {
+                            if (!nextLevelTag.IsMatch(parUrlStr))
+                                return false;
+                            parUrlStr = nextLevelTag.Replace(parUrlStr, "");
+                        }
+                        urlStr = parUrlStr.TrimEnd(new char[] { '/' }) + "/" + urlStr.TrimStart(new char[] { '/' });
                     }
-                    for (int i = 0; i < index; i++)
-                    {
-                        if (!nextLevelTag.IsMatch(parUrlStr))
-                            return false;
-                        parUrlStr = nextLevelTag.Replace(parUrlStr, "");
-                    }
-                    urlStr = parUrlStr + "/" + urlStr.TrimStart(new char[] { '/' });
                 }
             }
             return true;
