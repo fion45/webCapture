@@ -18,3 +18,9 @@ F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csprojResolveAs
 F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.Form1.resources
 F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.Properties.Resources.resources
 F:\C#.NET\WebCapture\CaptureWebInfo\obj\x86\Debug\CaptureWebInfo.csproj.GenerateResource.Cache
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\Controller.dll
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\Model.dll
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\DBHelper.dll
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\Controller.pdb
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\Model.pdb
+G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\DBHelper.pdb

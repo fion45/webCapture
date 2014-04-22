@@ -38,6 +38,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -80,6 +81,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Controller\Controller.csproj">
+      <Project>{3F23837F-7843-4163-956F-AB1DB12D5613}</Project>
+      <Name>Controller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{0B9AD8EB-E484-4427-8C4E-D0BAB6882DC7}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SEOHelper\SEOHelper.csproj">
       <Project>{0A9BDB99-90A0-459C-877E-2AC4C51588EF}</Project>
       <Name>SEOHelper</Name>

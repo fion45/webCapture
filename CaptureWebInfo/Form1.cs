@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 using System.IO;
 using mshtml;
 using SEOHelper;
+using Model;
+using Controller;
+using System.Configuration;
 
 namespace CaptureWebInfo
 {
@@ -20,15 +23,25 @@ namespace CaptureWebInfo
         private int mLVIndex = 0;
 
         //Test
-        private List<MemoryStream> mSList = new List<MemoryStream>();
+        //private List<MemoryStream> mSList = new List<MemoryStream>();
         private List<string[]> mRgxStrList = new List<string[]>();
 
         public Form1()
         {
             InitializeComponent();
+            LoadConfig();
+
             cap.Enabled = false;
             mTimer.Interval = 1000;
             mTimer.Tick += mTimer_Tick;
+        }
+
+        private void LoadConfig()
+        {
+            ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            urlTB.Text = ConfigurationManager.AppSettings["urlAddr"];
+            AETB.Text = ConfigurationManager.AppSettings["matchAddr"];
+            ContentTB.Text = ConfigurationManager.AppSettings["contentRgx"];
         }
 
         void mTimer_Tick(object sender, EventArgs e)
@@ -78,17 +91,15 @@ namespace CaptureWebInfo
                 case 1:
                     mSEOHelper.Start(tmpStr, CheckUrlCB, DealWithContentCB);
                     mTimer.Start();
-                    mSList.Clear();
+                    //mSList.Clear();
                     mRgxStrList.Clear();
                     tmpStr = ContentTB.Text;
                     string[] tSArr = tmpStr.Split(new char[] { '|' });
                     foreach (string tmpS in tSArr)
                     {
                         string[] tmpSArr = tmpS.Split(new char[] { ';' });
-                        if (tmpSArr.Length < 2)
-                            continue;
                         mRgxStrList.Add(tmpSArr);
-                        mSList.Add(new MemoryStream());
+                        //mSList.Add(new MemoryStream());
                     }
                     break;
                 case 2:
@@ -206,22 +217,27 @@ namespace CaptureWebInfo
                 Regex mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl))
                 {
-                    for (int j = 1; j < tmpStrArr.Length; j++)
+                    Regex cRgx = new Regex(tmpStrArr[1],RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    MatchCollection MC2 = cRgx.Matches(response);
+                    foreach (Match m2 in MC2)
                     {
-                        Regex cRgx = new Regex(tmpStrArr[j],RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                        MatchCollection MC2 = cRgx.Matches(response);
-                        foreach (Match m2 in MC2)
+                        for (int k = 0; k < m2.Groups.Count; k++)
                         {
-                            for (int k = 0; k < m2.Groups.Count; k++)
-                            {
-                                byte[] tmpBuffer = Encoding.Unicode.GetBytes(m2.Groups[k].Value);
-                                mSList[i].Write(tmpBuffer, 0, tmpBuffer.Length);
-                            }
+                             //m2.Groups["tile"].Value
+                            //Product product = new Product();
+                            //mSList[i].Write(tmpBuffer, 0, tmpBuffer.Length);
                         }
                     }
                 }
             }
 
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ConfigurationManager.AppSettings.Add("urlAddr", urlTB.Text);
+            ConfigurationManager.AppSettings.Add("matchAddr", AETB.Text);
+            ConfigurationManager.AppSettings.Add("contentRgx", ContentTB.Text);
         }
     }
 }

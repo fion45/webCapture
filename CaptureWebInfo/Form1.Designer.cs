@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabView = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
@@ -210,8 +211,7 @@
             this.ContentTB.Name = "ContentTB";
             this.ContentTB.Size = new System.Drawing.Size(314, 338);
             this.ContentTB.TabIndex = 15;
-            this.ContentTB.Text = "/Product/List/\\?category=\\d+;<div[^<]*?\\sid\\s*=\\s*\\\"*currentPlace\\\"*[^<>]+?>[^<>]" +
-    "*?(<a\\s[^<>]+?>([^<>]+?)</a>[^<>]*)+?</div>|/Product/Details/\\d+;";
+            this.ContentTB.Text = resources.GetString("ContentTB.Text");
             // 
             // SHCB
             // 
@@ -328,7 +328,7 @@
             // 
             this.urlLV.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.urlLV.Location = new System.Drawing.Point(-4, 28);
+            this.urlLV.Location = new System.Drawing.Point(-4, 36);
             this.urlLV.Name = "urlLV";
             this.urlLV.Size = new System.Drawing.Size(536, 522);
             this.urlLV.TabIndex = 0;
@@ -387,6 +387,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.tabView.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
