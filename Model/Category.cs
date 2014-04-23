@@ -7,9 +7,29 @@ namespace Model
 {
     public class Category : IDBObject
     {
-        int CID;
-        int ParCID;
-        string NameStr;
+        public int CID
+        {
+            get;
+            set;
+        }
+
+        public int ParCID
+        {
+            get;
+            set;
+        }
+
+        public string NameStr
+        {
+            get;
+            set;
+        }
+
+        public int Tag
+        {
+            get;
+            set;
+        }
 
         public Category()
         {
@@ -19,6 +39,11 @@ namespace Model
         public int GetID()
         {
             return CID;
+        }
+
+        public void SetID(int ID)
+        {
+            CID = ID;
         }
     }
 }

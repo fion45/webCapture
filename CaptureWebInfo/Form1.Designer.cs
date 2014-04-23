@@ -197,9 +197,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(541, 197);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(305, 12);
+            this.label8.Size = new System.Drawing.Size(233, 12);
             this.label8.TabIndex = 17;
-            this.label8.Text = "获取内容规则（[url正则;内容1正则;内容2正则...]）：";
+            this.label8.Text = "获取内容规则(Catagory,Brand,Product)：";
             // 
             // ContentTB
             // 

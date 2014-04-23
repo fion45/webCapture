@@ -7,8 +7,23 @@ namespace Model
 {
     public class Brand : IDBObject
     {
-        int BID;
-        string NameStr;
+        public int BID
+        {
+            get;
+            set;
+        }
+
+        public string NameStr
+        {
+            get;
+            set;
+        }
+
+        public int Tag
+        {
+            get;
+            set;
+        }
 
         public Brand()
         {
@@ -17,6 +32,11 @@ namespace Model
         public int GetID()
         {
             return BID;
+        }
+
+        public void SetID(int ID)
+        {
+            BID = ID;
         }
     }
 }

@@ -2,29 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data;
 using System.Threading;
 using Model;
 
 namespace Controller
 {
-    public class ProductDAL : DALBase<Product>
+    public class BrandDAL : DALBase<Brand>
     {
 
     }
 
-    public class ProductController : ControllerBase<Product, ProductDAL>
+    public class BrandController : ControllerBase<Brand, BrandDAL>
     {
         private Dictionary<int, int> mTagDic = new Dictionary<int, int>();
         private int index = 0;
 
-        public ProductController()
+        public BrandController()
         {
             mBAMCB = NotExist;
             mAAMCB = AfterAddToMemoryFun;
         }
 
-        public bool NotExist(Product obj)
+        public bool NotExist(Brand obj)
         {
             if (!mSyncTag)
                 RefreshFromDB();
@@ -37,7 +36,7 @@ namespace Controller
                 return true;
         }
 
-        public void AfterAddToMemoryFun(Product obj)
+        public void AfterAddToMemoryFun(Brand obj)
         {
             Monitor.Enter(mTagDic);
             mTagDic.Add(obj.Tag, index);

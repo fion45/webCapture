@@ -8,5 +8,6 @@ namespace Model
     public interface IDBObject
     {
         int GetID();
+        void SetID(int ID);
     }
 }

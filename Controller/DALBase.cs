@@ -51,7 +51,7 @@ namespace Controller
                 _dalclass = this.GetType();
                 string tempStr = _modeltype.Name;
                 //表名
-                _tablename = "tb_" + tempStr.Substring(0, tempStr.IndexOf("Model"));
+                _tablename = "tb_" + tempStr;
                 //从数据库里获取该表的Key
                 SqlParameter[] parameters = new SqlParameter[]{
                     new SqlParameter("@TableName",SqlDbType.VarChar,50)

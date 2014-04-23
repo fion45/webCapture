@@ -21,6 +21,11 @@ namespace CaptureWebInfo
         private CSEOHelper mSEOHelper = new CSEOHelper();
         private Timer mTimer = new Timer();
         private int mLVIndex = 0;
+        private Configuration mConfig = null;
+        private FileInfo mRegexFI = null;
+        private CategoryController mCatCon = new CategoryController();
+        private BrandController mBraCon = new BrandController();
+        private ProductController mProCon = new ProductController();
 
         //Test
         //private List<MemoryStream> mSList = new List<MemoryStream>();
@@ -38,10 +43,32 @@ namespace CaptureWebInfo
 
         private void LoadConfig()
         {
-            ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+#if DEBUG
+            string applicationName =
+                Environment.GetCommandLineArgs()[0];
+            applicationName = applicationName.Replace(".vshost.", ".");
+#else
+             string applicationName =
+            Environment.GetCommandLineArgs()[0]+ ".exe";
+#endif
+
+            string exePath = System.IO.Path.Combine(Environment.CurrentDirectory, applicationName);
+            string rgxFPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Content.rgx");
+            mRegexFI = new FileInfo(rgxFPath);
+            if(mRegexFI.Exists)
+            {
+                FileStream tmpFS = mRegexFI.OpenRead();
+                byte[] tmpB = new byte[tmpFS.Length];
+                tmpFS.Read(tmpB, 0, (int)(tmpFS.Length));
+                ContentTB.Text = Encoding.Unicode.GetString(tmpB);
+                tmpFS.Close();
+            }
+            
+
+            mConfig = ConfigurationManager.OpenExeConfiguration(exePath);
             urlTB.Text = ConfigurationManager.AppSettings["urlAddr"];
             AETB.Text = ConfigurationManager.AppSettings["matchAddr"];
-            ContentTB.Text = ConfigurationManager.AppSettings["contentRgx"];
+
         }
 
         void mTimer_Tick(object sender, EventArgs e)
@@ -211,33 +238,144 @@ namespace CaptureWebInfo
 
         public void DealWithContentCB(Visitor visitor,string response)
         {
-            for(int i=0;i<mRgxStrList.Count;i++)
+            int CID = -1,BID = -1;
+            //获得Category
+            string[] tmpStrArr = mRgxStrList[0];
+            Regex mRgx = new Regex(tmpStrArr[0]);
+            if (mRgx.IsMatch(visitor.mUrl))
             {
-                string[] tmpStrArr = mRgxStrList[i];
-                Regex mRgx = new Regex(tmpStrArr[0]);
-                if (mRgx.IsMatch(visitor.mUrl))
+                Regex cRgx = new Regex(tmpStrArr[1],RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match match = cRgx.Match(response);
+                Group tmpG = match.Groups["Category_Name"];
+                Group tmpG1 = match.Groups["Category_Tag"];
+                Category tmpC;
+                int tag = -1;
+                for(int i=0;i<tmpG.Captures.Count;i++)
                 {
-                    Regex cRgx = new Regex(tmpStrArr[1],RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    MatchCollection MC2 = cRgx.Matches(response);
-                    foreach (Match m2 in MC2)
+                    tmpC = new Category();
+                    if (tag != -1)
+                        tmpC.ParCID = mCatCon.GetID(tag);
+                    tmpC.Tag = int.Parse(tmpG1.Captures[i].Value);
+                    tmpC.NameStr = tmpG.Captures[i].Value;
+                    if (mCatCon.AddToMemory(tmpC))
                     {
-                        for (int k = 0; k < m2.Groups.Count; k++)
-                        {
-                             //m2.Groups["tile"].Value
-                            //Product product = new Product();
-                            //mSList[i].Write(tmpBuffer, 0, tmpBuffer.Length);
-                        }
+                        mCatCon.RefreshToDB();
                     }
+                    tag = tmpC.Tag;
+                }
+                CID = mCatCon.GetID(tag);
+            }
+            //获得Brand
+            tmpStrArr = mRgxStrList[1];
+            mRgx = new Regex(tmpStrArr[0]);
+            if (mRgx.IsMatch(visitor.mUrl))
+            {
+                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match match = cRgx.Match(response);
+                Group tmpG = match.Groups["Brand_Name"];
+                Group tmpG1 = match.Groups["Brand_Tag"];
+                Brand brand = new Brand();
+                brand.NameStr = tmpG.Value;
+                brand.Tag = int.Parse(tmpG1.Value);
+                if (mBraCon.AddToMemory(brand))
+                {
+                    mBraCon.RefreshToDB();
+                }
+                BID = mBraCon.GetID(brand.Tag);
+            }
+            //获得产品图片
+            Product product = new Product();
+            tmpStrArr = mRgxStrList[2];
+            mRgx = new Regex(tmpStrArr[0]);
+            if (mRgx.IsMatch(visitor.mUrl))
+            {
+                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match match = cRgx.Match(response);
+                Group tmpG = match.Groups["Product_ImgPath"];
+                string tmpStr = "";
+                for (int i = 0; i < tmpG.Captures.Count; i++)
+                {
+                    tmpStr += tmpG.Captures[i].Value + ";";
+                }
+                product.ImgPath = tmpStr;
+                if (mProCon.AddToMemory(product))
+                {
+                    mProCon.RefreshToDB();
                 }
             }
-
+            //获得产品参数
+            tmpStrArr = mRgxStrList[2];
+            mRgx = new Regex(tmpStrArr[0]);
+            if (mRgx.IsMatch(visitor.mUrl))
+            {
+                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match match = cRgx.Match(response);
+                Group tmpG = match.Groups["Product_Title"];
+                Group tmpG1 = match.Groups["Product_ChoseTag"];
+                Group tmpG2 = match.Groups["Product_Chose"];
+                product.Title = tmpG.Value;
+                product.ChoseTag = tmpG1.Value;
+                string tmpStr = "";
+                for (int i = 0; i < tmpG2.Captures.Count; i++)
+                {
+                    tmpStr += tmpG2.Captures[i].Value + ";";
+                }
+                tmpStr.TrimEnd(';');
+                product.Chose = tmpStr;
+            }
+            //获得产品参数
+            tmpStrArr = mRgxStrList[2];
+            mRgx = new Regex(tmpStrArr[0]);
+            if (mRgx.IsMatch(visitor.mUrl))
+            {
+                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match match = cRgx.Match(response);
+                Group tmpG = match.Groups["Product_Sale"];
+                Group tmpG1 = match.Groups["Product_Tag"];
+                Group tmpG2 = match.Groups["Product_Price"];
+                Group tmpG3 = match.Groups["Product_MarketPrice"];
+                product.Price = float.Parse(tmpG2.Value);
+                product.MarketPrice = float.Parse(tmpG3.Value);
+                product.Sale = int.Parse(tmpG.Value);
+                product.Tag = int.Parse(tmpG1.Value);
+            }
+            //获得产品描述
+            tmpStrArr = mRgxStrList[2];
+            mRgx = new Regex(tmpStrArr[0]);
+            if (mRgx.IsMatch(visitor.mUrl))
+            {
+                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match match = cRgx.Match(response);
+                Group tmpG = match.Groups["Product_Descript"];
+                product.Descript = tmpG.Value;
+            }
+            product.CID = CID;
+            product.BrandID = BID;
+            if (mProCon.AddToMemory(product))
+            {
+                mProCon.RefreshToDB();
+            }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ConfigurationManager.AppSettings.Add("urlAddr", urlTB.Text);
-            ConfigurationManager.AppSettings.Add("matchAddr", AETB.Text);
-            ConfigurationManager.AppSettings.Add("contentRgx", ContentTB.Text);
+            if (mConfig.AppSettings.Settings.AllKeys.Contains("urlAddr"))
+                mConfig.AppSettings.Settings["urlAddr"].Value = urlTB.Text;
+            else
+                mConfig.AppSettings.Settings.Add("urlAddr", urlTB.Text);
+            if (mConfig.AppSettings.Settings.AllKeys.Contains("matchAddr"))
+                mConfig.AppSettings.Settings["matchAddr"].Value = AETB.Text;
+            else
+                mConfig.AppSettings.Settings.Add("matchAddr", AETB.Text);
+            mConfig.Save(ConfigurationSaveMode.Full);
+            if (mRegexFI.Exists)
+            {
+                mRegexFI.Delete();
+            }
+            FileStream tmpFS = mRegexFI.Create();
+            byte[] tmpBuf = Encoding.Unicode.GetBytes(ContentTB.Text);
+            tmpFS.Write(tmpBuf, 0, tmpBuf.Length);
+            tmpFS.Close();
         }
     }
 }

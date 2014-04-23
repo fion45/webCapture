@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLLBase.cs" />
+    <Compile Include="BrandController.cs" />
     <Compile Include="CategoryController.cs">
       <SubType>Code</SubType>
     </Compile>
