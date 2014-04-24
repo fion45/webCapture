@@ -21,41 +21,41 @@ namespace Controller
         {
             mBAMCB = NotExist;
             mAAMCB = AfterAddToMemoryFun;
+            RefreshFromDB();
         }
 
-        public bool NotExist(Category obj)
+        private bool NotExist(Category obj)
         {
-            if (!mSyncTag)
-                RefreshFromDB();
-            Monitor.Enter(mTagDic);
             bool tag = mTagDic.Keys.Contains(obj.Tag);
-            Monitor.Exit(mTagDic);
             if (tag)
                 return false;
             else
                 return true;
         }
 
-        public void AfterAddToMemoryFun(Category obj)
+        private void AfterAddToMemoryFun(Category obj)
         {
-            Monitor.Enter(mTagDic);
-            mTagDic.Add(obj.Tag, index);
-            ++index;
-            Monitor.Exit(mTagDic);
+            if (mTagDic.Keys.Contains(obj.Tag))
+            {
+                Console.WriteLine("Error:Same Tag[" + obj.Tag + "], class:Category");
+            }
+            else
+            {
+                mTagDic.Add(obj.Tag, index);
+                ++index;
+            }
         }
 
         public int GetID(int tag)
         {
             Monitor.Enter(mTagDic);
             bool exsis = mTagDic.Keys.Contains(tag);
-            Monitor.Exit(mTagDic);
             int result = -1;
             if (exsis)
             {
-                Monitor.Enter(mTagDic);
                 result = mArr[mTagDic[tag]].GetID();
-                Monitor.Exit(mTagDic);
             }
+            Monitor.Exit(mTagDic);
             return result;
         }
     }

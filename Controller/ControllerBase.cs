@@ -14,67 +14,96 @@ namespace Controller
         public delegate bool BeforeAddToMemoryCB(T obj);
         public delegate void AfterAddToMemoryCB(T obj);
 
-        protected bool mSyncTag = false;
         private List<int> mNotInDB = new List<int>();
         public List<T> mArr = new List<T>();
         protected BeforeAddToMemoryCB mBAMCB = null;
         protected AfterAddToMemoryCB mAAMCB = null;
-        private object tmpLock = new object();
 
         //把缓存的数据保存到数据库中
         public void RefreshToDB()
         {
-            Monitor.Enter(mArr);
-            //写进数据库
-            foreach (int index in mNotInDB)
+            try
             {
-                mArr[index].SetID(Add(mArr[index]));
+                Monitor.Enter(mArr);
+                //写进数据库
+                foreach (int index in mNotInDB)
+                {
+                    mArr[index].SetID(Add(mArr[index]));
+                }
+                mNotInDB.Clear();
             }
-            mNotInDB.Clear();
-            Monitor.Exit(mArr);
+            catch (Exception ex)
+            {
+                Type modeltype = typeof(T);
+                string tempStr = modeltype.Name;
+                string EStr = string.Format("Error:{0} {1} {2}", tempStr, ex.StackTrace, ex.Message);
+                Console.WriteLine(EStr);
+            }
+            finally
+            {
+                Monitor.Exit(mArr);
+            }
         }
 
         public bool AddToMemory(T obj)
         {
+            Monitor.Enter(mArr);
             if (mBAMCB == null | mBAMCB(obj))
             {
-                Monitor.Enter(mArr);
-                mNotInDB.Add(mArr.Count);
-                mArr.Add(obj);
-                Monitor.Exit(mArr);
+                try
+                {
+                    mNotInDB.Add(mArr.Count);
+                    mArr.Add(obj);
+                }
+                catch (Exception ex)
+                {
+                    Type modeltype = typeof(T);
+                    string tempStr = modeltype.Name;
+                    string EStr = string.Format("Error:{0} {1} {2}", tempStr, ex.StackTrace, ex.Message);
+                    Console.WriteLine(EStr);
+                }
                 if (mAAMCB != null)
                     mAAMCB(obj);
+                Monitor.Exit(mArr);
                 return true;
             }
+            Monitor.Exit(mArr);
             return false;
         }
 
         //从数据库中刷新数据到缓存中
         public void RefreshFromDB()
         {
-            Monitor.Enter(tmpLock);
-            if (!mSyncTag)
+            List<T> OList = null;
+            List<T> tmpOArr = mArr;
+            try
             {
-                mSyncTag = true;
-                Monitor.Exit(tmpLock);
                 //读取数据库
-                List<T> OList = GetAll();
-                Monitor.Enter(mArr);
-                for (int i = 0; i < mNotInDB.Count;i++ )
+                OList = GetAll();
+                Monitor.Enter(tmpOArr);
+                for (int i = 0; i < mNotInDB.Count; i++)
                 {
                     OList.Add(mArr[i]);
                 }
-                List<T> tmpOArr = mArr;
                 mArr = OList;
-                Monitor.Exit(tmpOArr);
-                if (mAAMCB != null)
-                {
-                    foreach (T obj in OList)
-                        mAAMCB(obj);
-                }
-                return;
             }
-            Monitor.Exit(tmpLock);
+            catch (Exception ex)
+            {
+                Type modeltype = typeof(T);
+                string tempStr = modeltype.Name;
+                string EStr = string.Format("Error:{0} {1} {2}", tempStr, ex.StackTrace, ex.Message);
+                Console.WriteLine(EStr);
+            }
+            finally
+            {
+                Monitor.Exit(tmpOArr);
+            }
+            if (mAAMCB != null && OList != null)
+            {
+                foreach (T obj in OList)
+                    mAAMCB(obj);
+            }
+            return;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace SEOHelper
 {
@@ -111,6 +112,7 @@ namespace SEOHelper
                         for(int i=1;i<4;i++)
                         {
                             string tmpUrlStr = tmpMC[tmpMC.Count - 1].Groups[i].Value;
+                            tmpUrlStr = tmpUrlStr.Trim();
                             if (!string.IsNullOrEmpty(tmpUrlStr))
                             {
                                 //去除前后缀
@@ -142,7 +144,7 @@ namespace SEOHelper
             catch(Exception ex)
             {
                 successTag = false;
-                string EStr = string.Format("Error:{0} [{1}]", tmpVisitor.mUrl, ex.Message);
+                string EStr = string.Format("Error:{0} [{1}\t{2}]", tmpVisitor.mUrl, ex.StackTrace, ex.Message);
                 Console.WriteLine(EStr);
 
             }
@@ -173,6 +175,53 @@ namespace SEOHelper
         public bool AlreadyHave(string url)
         {
             return mVManager.mUrlSet.Contains(url);
+        }
+
+        public void GetImg(string url, string localPath,int TimeOut = 5000)
+        {
+            HttpWebRequest tmpRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+            tmpRequest.Timeout = TimeOut;
+            HttpWebResponse response = null;
+            Stream streamResponse = null;
+            try
+            {
+                response = (HttpWebResponse)tmpRequest.GetResponse();
+                streamResponse = response.GetResponseStream();
+                Image simg = Image.FromStream(streamResponse);
+                string tmpDirectoryPath = localPath.Substring(0, localPath.LastIndexOf('\\'));
+                if (!Directory.Exists(tmpDirectoryPath))
+                    Directory.CreateDirectory(tmpDirectoryPath);
+                string tmpTag = localPath.Substring(localPath.LastIndexOf('.'));
+                System.Drawing.Imaging.ImageFormat tmpIFormat = System.Drawing.Imaging.ImageFormat.Bmp;
+                switch(tmpTag)
+                {
+                    case "jpg":
+                        {
+                            tmpIFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                            break;
+                        }
+                    case "png":
+                        {
+                            tmpIFormat = System.Drawing.Imaging.ImageFormat.Png;
+                            break;
+                        }
+                    default:
+                        {
+                            tmpIFormat = System.Drawing.Imaging.ImageFormat.Bmp;
+                            break;
+                        }
+                }
+                simg.Save(localPath, tmpIFormat);
+            }
+            catch(Exception ex)
+            {
+                string EStr = string.Format("Error:{0} [{1}\t{2}]", url, ex.StackTrace, ex.Message);
+                Console.WriteLine(EStr);
+            }
+            if (streamResponse != null)
+                streamResponse.Close();
+            if (response != null)
+                response.Close();
         }
     }
 }

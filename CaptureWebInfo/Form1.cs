@@ -13,6 +13,8 @@ using SEOHelper;
 using Model;
 using Controller;
 using System.Configuration;
+using System.Net;
+using System.Net.Sockets;
 
 namespace CaptureWebInfo
 {
@@ -238,122 +240,183 @@ namespace CaptureWebInfo
 
         public void DealWithContentCB(Visitor visitor,string response)
         {
-            int CID = -1,BID = -1;
-            //获得Category
-            string[] tmpStrArr = mRgxStrList[0];
-            Regex mRgx = new Regex(tmpStrArr[0]);
-            if (mRgx.IsMatch(visitor.mUrl))
+            try
             {
-                Regex cRgx = new Regex(tmpStrArr[1],RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                Match match = cRgx.Match(response);
-                Group tmpG = match.Groups["Category_Name"];
-                Group tmpG1 = match.Groups["Category_Tag"];
-                Category tmpC;
-                int tag = -1;
-                for(int i=0;i<tmpG.Captures.Count;i++)
+                int CID = -1, BID = -1;
+                //获得Category
+                string[] tmpStrArr = mRgxStrList[0];
+                Regex mRgx = new Regex(tmpStrArr[0]);
+                if (mRgx.IsMatch(visitor.mUrl))
                 {
-                    tmpC = new Category();
-                    if (tag != -1)
-                        tmpC.ParCID = mCatCon.GetID(tag);
-                    tmpC.Tag = int.Parse(tmpG1.Captures[i].Value);
-                    tmpC.NameStr = tmpG.Captures[i].Value;
-                    if (mCatCon.AddToMemory(tmpC))
+                    Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    Match match = cRgx.Match(response);
+                    Group tmpG = match.Groups["Category_Name"];
+                    Group tmpG1 = match.Groups["Category_Tag"];
+                    Category tmpC;
+                    int tag = -1;
+                    for (int i = 0; i < tmpG.Captures.Count; i++)
                     {
-                        mCatCon.RefreshToDB();
+                        tmpC = new Category();
+                        if (tag != -1)
+                            tmpC.ParCID = mCatCon.GetID(tag);
+                        tmpC.Tag = int.Parse(tmpG1.Captures[i].Value);
+                        tmpC.NameStr = tmpG.Captures[i].Value;
+                        if (mCatCon.AddToMemory(tmpC))
+                        {
+                            mCatCon.RefreshToDB();
+                        }
+                        tag = tmpC.Tag;
                     }
-                    tag = tmpC.Tag;
+                    CID = mCatCon.GetID(tag);
                 }
-                CID = mCatCon.GetID(tag);
-            }
-            //获得Brand
-            tmpStrArr = mRgxStrList[1];
-            mRgx = new Regex(tmpStrArr[0]);
-            if (mRgx.IsMatch(visitor.mUrl))
-            {
-                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                Match match = cRgx.Match(response);
-                Group tmpG = match.Groups["Brand_Name"];
-                Group tmpG1 = match.Groups["Brand_Tag"];
-                Brand brand = new Brand();
-                brand.NameStr = tmpG.Value;
-                brand.Tag = int.Parse(tmpG1.Value);
-                if (mBraCon.AddToMemory(brand))
+                //获得Brand
+                tmpStrArr = mRgxStrList[1];
+                mRgx = new Regex(tmpStrArr[0]);
+                if (mRgx.IsMatch(visitor.mUrl))
                 {
-                    mBraCon.RefreshToDB();
+                    Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    Match match = cRgx.Match(response);
+                    Group tmpG = match.Groups["Brand_Name"];
+                    Group tmpG1 = match.Groups["Brand_Tag"];
+                    Brand brand = new Brand();
+                    if (!string.IsNullOrEmpty(match.Value))
+                    {
+                        brand.NameStr = tmpG.Value.Trim();
+                        brand.Tag = int.Parse(tmpG1.Value);
+                        if (mBraCon.AddToMemory(brand))
+                        {
+                            mBraCon.RefreshToDB();
+                        }
+                        BID = mBraCon.GetID(brand.Tag);
+                    }
                 }
-                BID = mBraCon.GetID(brand.Tag);
-            }
-            //获得产品图片
-            Product product = new Product();
-            tmpStrArr = mRgxStrList[2];
-            mRgx = new Regex(tmpStrArr[0]);
-            if (mRgx.IsMatch(visitor.mUrl))
-            {
-                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                Match match = cRgx.Match(response);
-                Group tmpG = match.Groups["Product_ImgPath"];
-                string tmpStr = "";
-                for (int i = 0; i < tmpG.Captures.Count; i++)
+                Regex PTagRgx = new Regex("\\d+$");
+                int ProductTag;
+                tmpStrArr = mRgxStrList[2];
+                mRgx = new Regex(tmpStrArr[0]);
+                if (mRgx.IsMatch(visitor.mUrl) && int.TryParse(PTagRgx.Match(visitor.mUrl).Value, out ProductTag))
                 {
-                    tmpStr += tmpG.Captures[i].Value + ";";
+                    mProCon.RefreshFromDB();
+                    if (mProCon.GetID(ProductTag) == -1)
+                    {
+                        //获得产品图片
+                        Product product = new Product();
+                        tmpStrArr = mRgxStrList[2];
+                        mRgx = new Regex(tmpStrArr[0]);
+                        if (mRgx.IsMatch(visitor.mUrl))
+                        {
+                            Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match match = cRgx.Match(response);
+                            Group tmpG = match.Groups["Product_ImgPath"];
+                            string tmpStr = "";
+                            Regex dRgx = new Regex("/(?<year>\\d+)/(?<month>\\d+)/(?<day>\\d+)/(?<name>.+)$");
+                            for (int i = 0; i < tmpG.Captures.Count; i++)
+                            {
+                                Match m1 = dRgx.Match(tmpG.Captures[i].Value);
+                                string imgPath = Environment.CurrentDirectory + "/picture" + m1.Value;
+                                imgPath = imgPath.Replace('/', '\\');
+                                //获得产品的图片
+                                if (!File.Exists(imgPath))
+                                    mSEOHelper.GetImg(tmpG.Captures[i].Value, imgPath);
+                                tmpStr += imgPath.Substring(Environment.CurrentDirectory.Length) + ";";
+                            }
+                            product.ImgPath = tmpStr;
+                        }
+                        //获得产品参数
+                        tmpStrArr = mRgxStrList[3];
+                        mRgx = new Regex(tmpStrArr[0]);
+                        if (mRgx.IsMatch(visitor.mUrl))
+                        {
+                            Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match match = cRgx.Match(response);
+                            Group tmpG = match.Groups["Product_Title"];
+                            product.Title = tmpG.Value.Trim();
+                        }
+                        tmpStrArr = mRgxStrList[4];
+                        mRgx = new Regex(tmpStrArr[0]);
+                        if (mRgx.IsMatch(visitor.mUrl))
+                        {
+                            Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match match = cRgx.Match(response);
+                            Group tmpG2 = match.Groups["Product_Chose"];
+                            product.Chose = tmpG2.Value.Trim();
+                        }
+                        //获得产品参数
+                        tmpStrArr = mRgxStrList[5];
+                        mRgx = new Regex(tmpStrArr[0]);
+                        if (mRgx.IsMatch(visitor.mUrl))
+                        {
+                            Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match match = cRgx.Match(response);
+                            if(!string.IsNullOrEmpty(match.Value))
+                            {
+                                Group tmpG = match.Groups["Product_Sale"];
+                                Group tmpG2 = match.Groups["Product_Price"];
+                                Group tmpG3 = match.Groups["Product_MarketPrice"];
+                                float tmpF;
+                                if (!float.TryParse(tmpG2.Value, out tmpF))
+                                    Console.WriteLine("Error:Price Parse," + visitor.mUrl);
+                                product.Price = tmpF;
+                                if(!float.TryParse(tmpG3.Value, out tmpF))
+                                    Console.WriteLine("Error:MarketPrice Parse," + visitor.mUrl);
+                                product.MarketPrice = tmpF;
+                                int tmpInt;
+                                if(!int.TryParse(tmpG.Value, out tmpInt))
+                                    Console.WriteLine("Error:Sale Count Parse," + visitor.mUrl);
+                                product.Sale = tmpInt;
+                            }
+                            product.Tag = ProductTag;
+                        }
+                        //获得产品描述
+                        tmpStrArr = mRgxStrList[6];
+                        mRgx = new Regex(tmpStrArr[0]);
+                        if (mRgx.IsMatch(visitor.mUrl))
+                        {
+                            Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Regex hrefRgx = new Regex("\\shref\\s*?=\\s*?\"(?<href>[^\"]+?)\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Regex srcRgx = new Regex("\\ssrc\\s*?=\\s*?\"(?<src>[^\"]+?)\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match match = cRgx.Match(response);
+                            Group tmpG = match.Groups["Product_Descript"];
+                            string DesStr = tmpG.Value.Trim();
+                            //获得其中的图片
+                            int HIndex = 0;
+                            int tmpAC = 0;
+                            MatchCollection tmpHrefMC = hrefRgx.Matches(DesStr);
+                            foreach (Match tmpHrefMA in tmpHrefMC)
+                            {
+                                string hrefStr = tmpHrefMA.Groups["href"].Value;
+                                Analyzer.FillUrlString(ref hrefStr,visitor.mUrl);
+                                string hrefLoc = string.Format("/product/{0}/{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.')));
+                                mSEOHelper.GetImg(hrefStr,Environment.CurrentDirectory + hrefLoc);
+                                hrefLoc = " href=\"/product/" + hrefLoc + "\"";
+                                DesStr = DesStr.Substring(0, tmpHrefMA.Index - tmpAC) + hrefLoc + DesStr.Substring(tmpHrefMA.Index + tmpHrefMA.Value.Length - tmpAC);
+                                tmpAC = tmpHrefMA.Value.Length - hrefLoc.Length;
+                                ++HIndex;
+                            }
+                            //过滤掉所有外链
+                            tmpAC = 0;
+                            MatchCollection tmpSrcMC = hrefRgx.Matches(DesStr);
+                            string errLink = " src=\"errorLink.html\"";
+                            foreach (Match tmpSrcMA in tmpSrcMC)
+                            {
+                                DesStr = DesStr.Substring(0, tmpSrcMA.Index - tmpAC) + errLink + DesStr.Substring(tmpSrcMA.Index + tmpSrcMA.Value.Length - tmpAC);
+                                tmpAC = tmpSrcMA.Value.Length - errLink.Length;
+                            }
+                            product.Descript = DesStr;
+                        }
+                        product.CID = CID;
+                        product.BrandID = BID;
+                        if (mProCon.AddToMemory(product))
+                        {
+                            mProCon.RefreshToDB();
+                        }
+                    }
                 }
-                product.ImgPath = tmpStr;
-                if (mProCon.AddToMemory(product))
-                {
-                    mProCon.RefreshToDB();
-                }
             }
-            //获得产品参数
-            tmpStrArr = mRgxStrList[2];
-            mRgx = new Regex(tmpStrArr[0]);
-            if (mRgx.IsMatch(visitor.mUrl))
+            catch (Exception ex)
             {
-                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                Match match = cRgx.Match(response);
-                Group tmpG = match.Groups["Product_Title"];
-                Group tmpG1 = match.Groups["Product_ChoseTag"];
-                Group tmpG2 = match.Groups["Product_Chose"];
-                product.Title = tmpG.Value;
-                product.ChoseTag = tmpG1.Value;
-                string tmpStr = "";
-                for (int i = 0; i < tmpG2.Captures.Count; i++)
-                {
-                    tmpStr += tmpG2.Captures[i].Value + ";";
-                }
-                tmpStr.TrimEnd(';');
-                product.Chose = tmpStr;
-            }
-            //获得产品参数
-            tmpStrArr = mRgxStrList[2];
-            mRgx = new Regex(tmpStrArr[0]);
-            if (mRgx.IsMatch(visitor.mUrl))
-            {
-                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                Match match = cRgx.Match(response);
-                Group tmpG = match.Groups["Product_Sale"];
-                Group tmpG1 = match.Groups["Product_Tag"];
-                Group tmpG2 = match.Groups["Product_Price"];
-                Group tmpG3 = match.Groups["Product_MarketPrice"];
-                product.Price = float.Parse(tmpG2.Value);
-                product.MarketPrice = float.Parse(tmpG3.Value);
-                product.Sale = int.Parse(tmpG.Value);
-                product.Tag = int.Parse(tmpG1.Value);
-            }
-            //获得产品描述
-            tmpStrArr = mRgxStrList[2];
-            mRgx = new Regex(tmpStrArr[0]);
-            if (mRgx.IsMatch(visitor.mUrl))
-            {
-                Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                Match match = cRgx.Match(response);
-                Group tmpG = match.Groups["Product_Descript"];
-                product.Descript = tmpG.Value;
-            }
-            product.CID = CID;
-            product.BrandID = BID;
-            if (mProCon.AddToMemory(product))
-            {
-                mProCon.RefreshToDB();
+                string EStr = string.Format("Error:{0} [{1}\t{2}]", visitor.mUrl, ex.StackTrace, ex.Message);
+                Console.WriteLine(EStr);
             }
         }
 

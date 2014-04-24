@@ -31,12 +31,6 @@ namespace Model
             set;
         }
 
-        public string ChoseTag
-        {
-            get;
-            set;
-        }
-
         public string Chose
         {
             get;

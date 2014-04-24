@@ -208,7 +208,8 @@ namespace Controller
                             }
                             catch (Exception ex)
                             {
-
+                                string EStr = string.Format("Error:{0} {1}", ex.StackTrace, ex.Message);
+                                Console.WriteLine(EStr);
                             }
                         }
                     }
