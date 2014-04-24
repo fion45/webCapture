@@ -310,9 +310,18 @@ namespace CaptureWebInfo
                             Group tmpG = match.Groups["Product_ImgPath"];
                             string tmpStr = "";
                             Regex dRgx = new Regex("/(?<year>\\d+)/(?<month>\\d+)/(?<day>\\d+)/(?<name>.+)$");
+                            string tmpDStr = DateTime.Now.ToString("yyyy-MM-dd");
                             for (int i = 0; i < tmpG.Captures.Count; i++)
                             {
                                 Match m1 = dRgx.Match(tmpG.Captures[i].Value);
+                                if(i==0)
+                                {
+                                    string tmpMStr = "0" + m1.Groups["month"].Value;
+                                    tmpMStr = tmpMStr.Substring(tmpMStr.Length - 2);
+                                    string tmpDayStr = "0" + m1.Groups["day"].Value;
+                                    tmpDayStr = tmpDayStr.Substring(tmpDayStr.Length - 2);
+                                    tmpDStr = "20" + m1.Groups["year"].Value + "-" + tmpMStr + "-" + tmpDayStr;
+                                }
                                 string imgPath = Environment.CurrentDirectory + "/picture" + m1.Value;
                                 imgPath = imgPath.Replace('/', '\\');
                                 //获得产品的图片
@@ -320,6 +329,7 @@ namespace CaptureWebInfo
                                     mSEOHelper.GetImg(tmpG.Captures[i].Value, imgPath);
                                 tmpStr += imgPath.Substring(Environment.CurrentDirectory.Length) + ";";
                             }
+                            product.Date = tmpDStr;
                             product.ImgPath = tmpStr;
                         }
                         //获得产品参数
@@ -381,28 +391,29 @@ namespace CaptureWebInfo
                             //获得其中的图片
                             int HIndex = 0;
                             int tmpAC = 0;
-                            MatchCollection tmpHrefMC = hrefRgx.Matches(DesStr);
-                            foreach (Match tmpHrefMA in tmpHrefMC)
+                            MatchCollection tmpSrcMC = srcRgx.Matches(DesStr);
+                            foreach (Match tmpSrcMA in tmpSrcMC)
                             {
-                                string hrefStr = tmpHrefMA.Groups["href"].Value;
-                                Analyzer.FillUrlString(ref hrefStr,visitor.mUrl);
-                                string hrefLoc = string.Format("/product/{0}/{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.')));
-                                mSEOHelper.GetImg(hrefStr,Environment.CurrentDirectory + hrefLoc);
-                                hrefLoc = " href=\"/product/" + hrefLoc + "\"";
-                                DesStr = DesStr.Substring(0, tmpHrefMA.Index - tmpAC) + hrefLoc + DesStr.Substring(tmpHrefMA.Index + tmpHrefMA.Value.Length - tmpAC);
-                                tmpAC = tmpHrefMA.Value.Length - hrefLoc.Length;
+                                string hrefStr = tmpSrcMA.Groups["src"].Value;
+                                Analyzer.FillUrlString(ref hrefStr, visitor.mUrl);
+                                string hrefLoc = string.Format("\\product\\{0}\\{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.') + 1));
+                                mSEOHelper.GetImg(hrefStr, Environment.CurrentDirectory + hrefLoc);
+                                hrefLoc = hrefLoc.Replace('\\', '/');
+                                hrefLoc = " src=\"" + hrefLoc + "\"";
+                                DesStr = DesStr.Substring(0, tmpSrcMA.Index - tmpAC) + hrefLoc + DesStr.Substring(tmpSrcMA.Index + tmpSrcMA.Value.Length - tmpAC);
+                                tmpAC = tmpSrcMA.Value.Length - hrefLoc.Length;
                                 ++HIndex;
                             }
                             //过滤掉所有外链
-                            tmpAC = 0;
-                            MatchCollection tmpSrcMC = hrefRgx.Matches(DesStr);
-                            string errLink = " src=\"errorLink.html\"";
-                            foreach (Match tmpSrcMA in tmpSrcMC)
-                            {
-                                DesStr = DesStr.Substring(0, tmpSrcMA.Index - tmpAC) + errLink + DesStr.Substring(tmpSrcMA.Index + tmpSrcMA.Value.Length - tmpAC);
-                                tmpAC = tmpSrcMA.Value.Length - errLink.Length;
-                            }
                             product.Descript = DesStr;
+                            tmpAC = 0;
+                            string errLink = " href=\"errorLink.html\"";
+                            MatchCollection tmpHrefMC = hrefRgx.Matches(DesStr);
+                            foreach (Match tmpHrefMA in tmpHrefMC)
+                            {
+                                DesStr = DesStr.Substring(0, tmpHrefMA.Index - tmpAC) + errLink + DesStr.Substring(tmpHrefMA.Index + tmpHrefMA.Value.Length - tmpAC);
+                                tmpAC = tmpHrefMA.Value.Length - errLink.Length;
+                            }
                         }
                         product.CID = CID;
                         product.BrandID = BID;

@@ -37,13 +37,13 @@ namespace Model
             set;
         }
 
-        public float Price
+        public double Price
         {
             get;
             set;
         }
 
-        public float MarketPrice
+        public double MarketPrice
         {
             get;
             set;
@@ -80,6 +80,12 @@ namespace Model
         }
 
         public int Tag
+        {
+            get;
+            set;
+        }
+
+        public string Date
         {
             get;
             set;

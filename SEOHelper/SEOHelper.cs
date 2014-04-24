@@ -191,9 +191,9 @@ namespace SEOHelper
                 string tmpDirectoryPath = localPath.Substring(0, localPath.LastIndexOf('\\'));
                 if (!Directory.Exists(tmpDirectoryPath))
                     Directory.CreateDirectory(tmpDirectoryPath);
-                string tmpTag = localPath.Substring(localPath.LastIndexOf('.'));
+                string tmpTag = localPath.Substring(localPath.LastIndexOf('.') + 1);
                 System.Drawing.Imaging.ImageFormat tmpIFormat = System.Drawing.Imaging.ImageFormat.Bmp;
-                switch(tmpTag)
+                switch(tmpTag.ToLower())
                 {
                     case "jpg":
                         {
@@ -203,6 +203,11 @@ namespace SEOHelper
                     case "png":
                         {
                             tmpIFormat = System.Drawing.Imaging.ImageFormat.Png;
+                            break;
+                        }
+                    case "gif":
+                        {
+                            tmpIFormat = System.Drawing.Imaging.ImageFormat.Gif;
                             break;
                         }
                     default:

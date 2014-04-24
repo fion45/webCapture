@@ -327,14 +327,19 @@ namespace Controller
                         }
                     }
                 }
-                foreach (SqlParameter par in sqlParams)
+                if (sqlParams != null)
                 {
-                    tempList.Add(par);
+                    foreach (SqlParameter par in sqlParams)
+                    {
+                        tempList.Add(par);
+                    }
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 //构造Parameters失败
+                string EStr = string.Format("Error:{0} {1}", ex.StackTrace, ex.Message);
+                Console.WriteLine(EStr);
             }
             return tempList.ToArray();
         }
