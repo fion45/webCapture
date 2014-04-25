@@ -13,11 +13,13 @@ namespace SEOHelper
 {
     public class CSEOHelper
     {
+        const int MAXWORKTHREAD = 16;
         public delegate bool CheckUrlCB(string url);
         public delegate void DealWithContentCB(Visitor visitor, string responseStr);
 
         private CheckUrlCB mCUCB;
         private DealWithContentCB mDWCCB;
+        NetworkMonitor mNWMon = NetworkMonitor.GetInstance();
 
         public enum EHelperStatus
         {
@@ -37,6 +39,7 @@ namespace SEOHelper
             mContinue = new ManualResetEvent(true);
             mVManager = new VisitorManager();
             mThreadCount = 0;
+            ThreadPool.SetMaxThreads(MAXWORKTHREAD, MAXWORKTHREAD);
         }
 
         //public ~CSEOHelper()
@@ -93,7 +96,8 @@ namespace SEOHelper
                 Stream streamResponse = response.GetResponseStream();
                 StreamReader streamRead = new StreamReader(streamResponse);
                 string responseString = streamRead.ReadToEnd();
-
+                ////网络检测
+                //mNWMon.Increase(0, streamResponse.Length);
                 //调用回调函数处理内容
                 if (mDWCCB != null)
                     mDWCCB(tmpVisitor, responseString);
@@ -187,6 +191,8 @@ namespace SEOHelper
             {
                 response = (HttpWebResponse)tmpRequest.GetResponse();
                 streamResponse = response.GetResponseStream();
+                ////网络检测
+                //mNWMon.Increase(0, streamResponse.Length);
                 Image simg = Image.FromStream(streamResponse);
                 string tmpDirectoryPath = localPath.Substring(0, localPath.LastIndexOf('\\'));
                 if (!Directory.Exists(tmpDirectoryPath))

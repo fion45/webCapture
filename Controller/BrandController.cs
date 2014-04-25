@@ -19,18 +19,14 @@ namespace Controller
 
         public BrandController()
         {
-            mBAMCB = NotExist;
+            mBAMCB = BeforeAddToMemoryFun;
             mAAMCB = AfterAddToMemoryFun;
             RefreshFromDB();
         }
 
-        public bool NotExist(Brand obj)
+        public bool BeforeAddToMemoryFun(Brand obj)
         {
-            bool tag = mTagDic.Keys.Contains(obj.Tag);
-            if (tag)
-                return false;
-            else
-                return true;
+            return !mTagDic.Keys.Contains(obj.Tag);
         }
 
         public void AfterAddToMemoryFun(Brand obj)

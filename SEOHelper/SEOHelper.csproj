@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzer.cs" />
+    <Compile Include="NetworkMonitor.cs" />
     <Compile Include="SEOHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisitorManager.cs" />

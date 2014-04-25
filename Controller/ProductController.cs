@@ -20,18 +20,14 @@ namespace Controller
 
         public ProductController()
         {
-            mBAMCB = NotExist;
+            mBAMCB = BeforeAddToMemoryFun;
             mAAMCB = AfterAddToMemoryFun;
             RefreshFromDB();
         }
 
-        public bool NotExist(Product obj)
+        public bool BeforeAddToMemoryFun(Product obj)
         {
-            bool tag = mTagDic.Keys.Contains(obj.Tag);
-            if (tag)
-                return false;
-            else
-                return true;
+            return !mTagDic.Keys.Contains(obj.Tag);
         }
 
         public void AfterAddToMemoryFun(Product obj)

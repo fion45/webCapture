@@ -28,6 +28,7 @@ namespace CaptureWebInfo
         private CategoryController mCatCon = new CategoryController();
         private BrandController mBraCon = new BrandController();
         private ProductController mProCon = new ProductController();
+        private NetworkMonitor mNWMon = NetworkMonitor.GetInstance();
 
         //Test
         //private List<MemoryStream> mSList = new List<MemoryStream>();
@@ -101,6 +102,10 @@ namespace CaptureWebInfo
                 mTimer.Stop();
                 MessageBox.Show("have completed");
             }
+            //double SSpeed, RSpeed;
+            //mNWMon.GetNetworkState(out SSpeed, out RSpeed);
+            //SCLB.Text = SSpeed.ToString();
+            //RCLB.Text = RSpeed.ToString();
         }
 
         private void Go_Click(object sender, EventArgs e)
@@ -296,7 +301,6 @@ namespace CaptureWebInfo
                 mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl) && int.TryParse(PTagRgx.Match(visitor.mUrl).Value, out ProductTag))
                 {
-                    mProCon.RefreshFromDB();
                     if (mProCon.GetID(ProductTag) == -1)
                     {
                         //获得产品图片
@@ -314,7 +318,7 @@ namespace CaptureWebInfo
                             for (int i = 0; i < tmpG.Captures.Count; i++)
                             {
                                 Match m1 = dRgx.Match(tmpG.Captures[i].Value);
-                                if(i==0)
+                                if (i == 0 && !string.IsNullOrEmpty(m1.Value))
                                 {
                                     string tmpMStr = "0" + m1.Groups["month"].Value;
                                     tmpMStr = tmpMStr.Substring(tmpMStr.Length - 2);
@@ -397,11 +401,12 @@ namespace CaptureWebInfo
                                 string hrefStr = tmpSrcMA.Groups["src"].Value;
                                 Analyzer.FillUrlString(ref hrefStr, visitor.mUrl);
                                 string hrefLoc = string.Format("\\product\\{0}\\{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.') + 1));
-                                mSEOHelper.GetImg(hrefStr, Environment.CurrentDirectory + hrefLoc);
+                                if (!File.Exists(Environment.CurrentDirectory + hrefLoc))
+                                    mSEOHelper.GetImg(hrefStr, Environment.CurrentDirectory + hrefLoc);
                                 hrefLoc = hrefLoc.Replace('\\', '/');
                                 hrefLoc = " src=\"" + hrefLoc + "\"";
                                 DesStr = DesStr.Substring(0, tmpSrcMA.Index - tmpAC) + hrefLoc + DesStr.Substring(tmpSrcMA.Index + tmpSrcMA.Value.Length - tmpAC);
-                                tmpAC = tmpSrcMA.Value.Length - hrefLoc.Length;
+                                tmpAC += tmpSrcMA.Value.Length - hrefLoc.Length;
                                 ++HIndex;
                             }
                             //过滤掉所有外链
@@ -412,7 +417,7 @@ namespace CaptureWebInfo
                             foreach (Match tmpHrefMA in tmpHrefMC)
                             {
                                 DesStr = DesStr.Substring(0, tmpHrefMA.Index - tmpAC) + errLink + DesStr.Substring(tmpHrefMA.Index + tmpHrefMA.Value.Length - tmpAC);
-                                tmpAC = tmpHrefMA.Value.Length - errLink.Length;
+                                tmpAC += tmpHrefMA.Value.Length - errLink.Length;
                             }
                         }
                         product.CID = CID;
@@ -421,6 +426,33 @@ namespace CaptureWebInfo
                         {
                             mProCon.RefreshToDB();
                         }
+                    }
+                    else
+                    {
+                        //重新获得产品图片
+                        tmpStrArr = mRgxStrList[6];
+                        mRgx = new Regex(tmpStrArr[0]);
+                        if (mRgx.IsMatch(visitor.mUrl))
+                        {
+                            Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Regex srcRgx = new Regex("\\ssrc\\s*?=\\s*?\"(?<src>[^\"]+?)\"", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                            Match match = cRgx.Match(response);
+                            Group tmpG = match.Groups["Product_Descript"];
+                            string DesStr = tmpG.Value.Trim();
+                            //获得Descript其中的图片
+                            int HIndex = 0;
+                            MatchCollection tmpSrcMC = srcRgx.Matches(DesStr);
+                            foreach (Match tmpSrcMA in tmpSrcMC)
+                            {
+                                string hrefStr = tmpSrcMA.Groups["src"].Value;
+                                Analyzer.FillUrlString(ref hrefStr, visitor.mUrl);
+                                string hrefLoc = string.Format("\\product\\{0}\\{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.') + 1));
+                                if (!File.Exists(Environment.CurrentDirectory + hrefLoc))
+                                    mSEOHelper.GetImg(hrefStr, Environment.CurrentDirectory + hrefLoc);
+                                ++HIndex;
+                            }
+                        }
+
                     }
                 }
             }

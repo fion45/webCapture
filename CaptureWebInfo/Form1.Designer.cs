@@ -216,7 +216,7 @@
             // SHCB
             // 
             this.SHCB.AutoSize = true;
-            this.SHCB.Location = new System.Drawing.Point(540, 36);
+            this.SHCB.Location = new System.Drawing.Point(609, 37);
             this.SHCB.Name = "SHCB";
             this.SHCB.Size = new System.Drawing.Size(84, 16);
             this.SHCB.TabIndex = 14;
@@ -235,7 +235,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(536, 9);
+            this.label4.Location = new System.Drawing.Point(538, 38);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 12;

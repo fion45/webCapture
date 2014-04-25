@@ -19,18 +19,14 @@ namespace Controller
 
         public CategoryController()
         {
-            mBAMCB = NotExist;
+            mBAMCB = BeforeAddToMemoryFun;
             mAAMCB = AfterAddToMemoryFun;
             RefreshFromDB();
         }
 
-        private bool NotExist(Category obj)
+        public bool BeforeAddToMemoryFun(Category obj)
         {
-            bool tag = mTagDic.Keys.Contains(obj.Tag);
-            if (tag)
-                return false;
-            else
-                return true;
+            return !mTagDic.Keys.Contains(obj.Tag);
         }
 
         private void AfterAddToMemoryFun(Category obj)
