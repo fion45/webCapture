@@ -228,9 +228,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(538, 64);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(131, 12);
+            this.label7.Size = new System.Drawing.Size(293, 12);
             this.label7.TabIndex = 13;
-            this.label7.Text = "URL满足的正则表达式：";
+            this.label7.Text = "URL满足的正则表达式：(rgx1);(rgx2)|(rgx3);(rgx4)";
             // 
             // label4
             // 

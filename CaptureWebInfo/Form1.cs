@@ -233,24 +233,74 @@ namespace CaptureWebInfo
                 }
             }
             string tmpStr = AETB.Text;
-            string[] tmpSArr = tmpStr.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] tmpSArr = tmpStr.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             foreach(string tmpS in tmpSArr)
             {
-                Regex tmpRgx = new Regex(tmpS,RegexOptions.IgnoreCase);
-                if (!tmpRgx.IsMatch(url))
-                    return false;
+                bool tag = true;
+                string[] tmpSArr2 = tmpS.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach(string tmpS2 in tmpSArr2)
+                {
+                    Regex tmpRgx = new Regex(tmpS2, RegexOptions.IgnoreCase);
+                    if (!tmpRgx.IsMatch(url))
+                    {
+                        tag = false;
+                        break;
+                    }
+                }
+                if(tag)
+                    return true;
             }
-            return true;
+            return false;
         }
 
         public void DealWithContentCB(Visitor visitor,string response)
         {
             try
             {
-                int CID = -1, BID = -1;
-                //获得Category
+                //获得Brand图片
                 string[] tmpStrArr = mRgxStrList[0];
                 Regex mRgx = new Regex(tmpStrArr[0]);
+                if (mRgx.IsMatch(visitor.mUrl))
+                {
+                    Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    MatchCollection tmpMC = cRgx.Matches(response);
+                    foreach (Match match in tmpMC)
+                    {
+                        Group tmpG = match.Groups["Brand_Img"];
+                        Group tmpG1 = match.Groups["Brand_Tag"];
+                        Group tmpG2 = match.Groups["Brand_Name1"];
+                        Group tmpG3 = match.Groups["Brand_Name2"];
+                        if (!string.IsNullOrEmpty(match.Value))
+                        {
+                            for(int i=0;i<tmpG.Captures.Count;i++)
+                            {
+                                //获得牌子图片
+                                string srcStr = tmpG.Captures[i].Value;
+                                Analyzer.FillUrlString(ref srcStr, visitor.mUrl);
+                                string srcLoc = string.Format("\\Brand\\{0}.{1}", tmpG1.Captures[i], srcStr.Substring(srcStr.LastIndexOf('.') + 1));
+                                if (!File.Exists(Environment.CurrentDirectory + srcLoc))
+                                    mSEOHelper.GetImg(srcStr, Environment.CurrentDirectory + srcLoc);
+                                //加载牌子
+                                Brand brand = new Brand();
+                                brand.NameStr = tmpG2.Captures[i].Value.Trim();
+                                brand.Name2 = tmpG3.Captures[i].Value.Trim();
+                                brand.Tag = int.Parse(tmpG1.Value);
+                                if (mBraCon.AddToMemory(brand))
+                                {
+                                    mBraCon.RefreshToDB();
+                                }
+                                else
+                                {
+                                    mBraCon.UpdateDBAndMemory(brand);
+                                }
+                            }
+                        }
+                    }
+                }
+                int CID = -1, BID = -1;
+                //获得Category
+                tmpStrArr = mRgxStrList[1];
+                mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl))
                 {
                     Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -275,7 +325,7 @@ namespace CaptureWebInfo
                     CID = mCatCon.GetID(tag);
                 }
                 //获得Brand
-                tmpStrArr = mRgxStrList[1];
+                tmpStrArr = mRgxStrList[2];
                 mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl))
                 {
@@ -283,11 +333,12 @@ namespace CaptureWebInfo
                     Match match = cRgx.Match(response);
                     Group tmpG = match.Groups["Brand_Name"];
                     Group tmpG1 = match.Groups["Brand_Tag"];
-                    Brand brand = new Brand();
                     if (!string.IsNullOrEmpty(match.Value))
                     {
+                        Brand brand = new Brand();
                         brand.NameStr = tmpG.Value.Trim();
                         brand.Tag = int.Parse(tmpG1.Value);
+                        brand.Name2 = brand.NameStr;
                         if (mBraCon.AddToMemory(brand))
                         {
                             mBraCon.RefreshToDB();
@@ -297,7 +348,7 @@ namespace CaptureWebInfo
                 }
                 Regex PTagRgx = new Regex("\\d+$");
                 int ProductTag;
-                tmpStrArr = mRgxStrList[2];
+                tmpStrArr = mRgxStrList[3];
                 mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl) && int.TryParse(PTagRgx.Match(visitor.mUrl).Value, out ProductTag))
                 {
@@ -337,7 +388,7 @@ namespace CaptureWebInfo
                             product.ImgPath = tmpStr;
                         }
                         //获得产品参数
-                        tmpStrArr = mRgxStrList[3];
+                        tmpStrArr = mRgxStrList[4];
                         mRgx = new Regex(tmpStrArr[0]);
                         if (mRgx.IsMatch(visitor.mUrl))
                         {
@@ -346,7 +397,7 @@ namespace CaptureWebInfo
                             Group tmpG = match.Groups["Product_Title"];
                             product.Title = tmpG.Value.Trim();
                         }
-                        tmpStrArr = mRgxStrList[4];
+                        tmpStrArr = mRgxStrList[5];
                         mRgx = new Regex(tmpStrArr[0]);
                         if (mRgx.IsMatch(visitor.mUrl))
                         {
@@ -356,7 +407,7 @@ namespace CaptureWebInfo
                             product.Chose = tmpG2.Value.Trim();
                         }
                         //获得产品参数
-                        tmpStrArr = mRgxStrList[5];
+                        tmpStrArr = mRgxStrList[6];
                         mRgx = new Regex(tmpStrArr[0]);
                         if (mRgx.IsMatch(visitor.mUrl))
                         {
@@ -367,11 +418,11 @@ namespace CaptureWebInfo
                                 Group tmpG = match.Groups["Product_Sale"];
                                 Group tmpG2 = match.Groups["Product_Price"];
                                 Group tmpG3 = match.Groups["Product_MarketPrice"];
-                                float tmpF;
-                                if (!float.TryParse(tmpG2.Value, out tmpF))
+                                decimal tmpF;
+                                if (!decimal.TryParse(tmpG2.Value, out tmpF))
                                     Console.WriteLine("Error:Price Parse," + visitor.mUrl);
                                 product.Price = tmpF;
-                                if(!float.TryParse(tmpG3.Value, out tmpF))
+                                if (!decimal.TryParse(tmpG3.Value, out tmpF))
                                     Console.WriteLine("Error:MarketPrice Parse," + visitor.mUrl);
                                 product.MarketPrice = tmpF;
                                 int tmpInt;
@@ -382,7 +433,7 @@ namespace CaptureWebInfo
                             product.Tag = ProductTag;
                         }
                         //获得产品描述
-                        tmpStrArr = mRgxStrList[6];
+                        tmpStrArr = mRgxStrList[7];
                         mRgx = new Regex(tmpStrArr[0]);
                         if (mRgx.IsMatch(visitor.mUrl))
                         {
@@ -400,13 +451,13 @@ namespace CaptureWebInfo
                             {
                                 string hrefStr = tmpSrcMA.Groups["src"].Value;
                                 Analyzer.FillUrlString(ref hrefStr, visitor.mUrl);
-                                string hrefLoc = string.Format("\\product\\{0}\\{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.') + 1));
-                                if (!File.Exists(Environment.CurrentDirectory + hrefLoc))
-                                    mSEOHelper.GetImg(hrefStr, Environment.CurrentDirectory + hrefLoc);
-                                hrefLoc = hrefLoc.Replace('\\', '/');
-                                hrefLoc = " src=\"" + hrefLoc + "\"";
-                                DesStr = DesStr.Substring(0, tmpSrcMA.Index - tmpAC) + hrefLoc + DesStr.Substring(tmpSrcMA.Index + tmpSrcMA.Value.Length - tmpAC);
-                                tmpAC += tmpSrcMA.Value.Length - hrefLoc.Length;
+                                string srcLoc = string.Format("\\product\\{0}\\{1}.{2}", ProductTag, HIndex, hrefStr.Substring(hrefStr.LastIndexOf('.') + 1));
+                                if (!File.Exists(Environment.CurrentDirectory + srcLoc))
+                                    mSEOHelper.GetImg(hrefStr, Environment.CurrentDirectory + srcLoc);
+                                srcLoc = srcLoc.Replace('\\', '/');
+                                srcLoc = " src=\"" + srcLoc + "\"";
+                                DesStr = DesStr.Substring(0, tmpSrcMA.Index - tmpAC) + srcLoc + DesStr.Substring(tmpSrcMA.Index + tmpSrcMA.Value.Length - tmpAC);
+                                tmpAC += tmpSrcMA.Value.Length - srcLoc.Length;
                                 ++HIndex;
                             }
                             //过滤掉所有外链
@@ -429,8 +480,8 @@ namespace CaptureWebInfo
                     }
                     else
                     {
+                        tmpStrArr = mRgxStrList[7];
                         //重新获得产品图片
-                        tmpStrArr = mRgxStrList[6];
                         mRgx = new Regex(tmpStrArr[0]);
                         if (mRgx.IsMatch(visitor.mUrl))
                         {
@@ -452,7 +503,6 @@ namespace CaptureWebInfo
                                 ++HIndex;
                             }
                         }
-
                     }
                 }
             }

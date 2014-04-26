@@ -37,13 +37,13 @@ namespace Model
             set;
         }
 
-        public double Price
+        public decimal Price
         {
             get;
             set;
         }
 
-        public double MarketPrice
+        public decimal MarketPrice
         {
             get;
             set;

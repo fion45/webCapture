@@ -19,6 +19,12 @@ namespace Model
             set;
         }
 
+        public string Name2
+        {
+            get;
+            set;
+        }
+
         public int Tag
         {
             get;

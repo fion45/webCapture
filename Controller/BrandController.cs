@@ -44,14 +44,34 @@ namespace Controller
 
         public int GetID(int tag)
         {
-            Monitor.Enter(mTagDic);
+            Monitor.Enter(mArr);
             bool exsis = mTagDic.Keys.Contains(tag);
             int result = -1;
             if (exsis)
             {
                 result = mArr[mTagDic[tag]].GetID();
             }
-            Monitor.Exit(mTagDic);
+            Monitor.Exit(mArr);
+            return result;
+        }
+
+        public bool UpdateDBAndMemory(Brand brand)
+        {
+            Monitor.Enter(mArr);
+            bool result = false;
+            bool exsis = mTagDic.Keys.Contains(brand.Tag);
+            if (exsis)
+            {
+                int index = mTagDic[brand.Tag];
+                if (string.Compare(mArr[index].NameStr, brand.NameStr) != 0 ||
+                    string.Compare(mArr[index].Name2, brand.Name2) != 0)
+                {
+                    mArr[index].NameStr = brand.NameStr;
+                    mArr[index].Name2 = brand.Name2;
+                    result = Set(mArr[index]);
+                }
+            }
+            Monitor.Exit(mArr);
             return result;
         }
     }
