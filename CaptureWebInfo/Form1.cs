@@ -257,11 +257,13 @@ namespace CaptureWebInfo
         {
             try
             {
+                bool urlTag = false;
                 //获得Brand图片
                 string[] tmpStrArr = mRgxStrList[0];
                 Regex mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl))
                 {
+                    urlTag = true;
                     Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     MatchCollection tmpMC = cRgx.Matches(response);
                     foreach (Match match in tmpMC)
@@ -277,7 +279,7 @@ namespace CaptureWebInfo
                                 //获得牌子图片
                                 string srcStr = tmpG.Captures[i].Value;
                                 Analyzer.FillUrlString(ref srcStr, visitor.mUrl);
-                                string srcLoc = string.Format("\\Brand\\{0}.{1}", tmpG1.Captures[i], srcStr.Substring(srcStr.LastIndexOf('.') + 1));
+                                string srcLoc = string.Format("\brand\\{0}.{1}", tmpG1.Captures[i], srcStr.Substring(srcStr.LastIndexOf('.') + 1));
                                 if (!File.Exists(Environment.CurrentDirectory + srcLoc))
                                     mSEOHelper.GetImg(srcStr, Environment.CurrentDirectory + srcLoc);
                                 //加载牌子
@@ -298,17 +300,29 @@ namespace CaptureWebInfo
                     }
                 }
                 int CID = -1, BID = -1;
+                Category tmpC = new Category();
+                tmpC.Tag = 0;
+                tmpC.NameStr = "首页";
+                tmpC.ParCID = 1;
+                int tag = tmpC.Tag;
+                if (mCatCon.AddToMemory(tmpC))
+                {
+                    mCatCon.RefreshToDB();
+                    CID = mCatCon.GetID(tag);
+                    tmpC.ParCID = CID;
+                    mCatCon.Set(tmpC);
+                }
+                CID = mCatCon.GetID(tag);
                 //获得Category
                 tmpStrArr = mRgxStrList[1];
                 mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl))
                 {
+                    urlTag = true;
                     Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     Match match = cRgx.Match(response);
                     Group tmpG = match.Groups["Category_Name"];
                     Group tmpG1 = match.Groups["Category_Tag"];
-                    Category tmpC;
-                    int tag = -1;
                     for (int i = 0; i < tmpG.Captures.Count; i++)
                     {
                         tmpC = new Category();
@@ -329,6 +343,7 @@ namespace CaptureWebInfo
                 mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl))
                 {
+                    urlTag = true;
                     Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
                     Match match = cRgx.Match(response);
                     Group tmpG = match.Groups["Brand_Name"];
@@ -352,20 +367,21 @@ namespace CaptureWebInfo
                 mRgx = new Regex(tmpStrArr[0]);
                 if (mRgx.IsMatch(visitor.mUrl) && int.TryParse(PTagRgx.Match(visitor.mUrl).Value, out ProductTag))
                 {
+                    urlTag = true;
                     if (mProCon.GetID(ProductTag) == -1)
                     {
                         //获得产品图片
                         Product product = new Product();
-                        tmpStrArr = mRgxStrList[2];
+                        tmpStrArr = mRgxStrList[3];
                         mRgx = new Regex(tmpStrArr[0]);
                         if (mRgx.IsMatch(visitor.mUrl))
                         {
                             Regex cRgx = new Regex(tmpStrArr[1], RegexOptions.IgnoreCase | RegexOptions.Singleline);
                             Match match = cRgx.Match(response);
-                            Group tmpG = match.Groups["Product_ImgPath"];
                             string tmpStr = "";
-                            Regex dRgx = new Regex("/(?<year>\\d+)/(?<month>\\d+)/(?<day>\\d+)/(?<name>.+)$");
                             string tmpDStr = DateTime.Now.ToString("yyyy-MM-dd");
+                            Group tmpG = match.Groups["Product_ImgPath"];
+                            Regex dRgx = new Regex("/(?<year>\\d+)/(?<month>\\d+)/(?<day>\\d+)/(?<name>.+)$");
                             for (int i = 0; i < tmpG.Captures.Count; i++)
                             {
                                 Match m1 = dRgx.Match(tmpG.Captures[i].Value);
@@ -504,6 +520,13 @@ namespace CaptureWebInfo
                             }
                         }
                     }
+                }
+                if(urlTag)
+                {
+                    Url tmpUrl = new Url();
+                    tmpUrl.Address = visitor.mUrl;
+                    UrlController tmpUrlCon = new UrlController();
+                    tmpUrlCon.Add(tmpUrl);
                 }
             }
             catch (Exception ex)

@@ -128,8 +128,8 @@ namespace SEOHelper
 
         public static bool FillUrlString(ref string urlStr,string parUrlStr)
         {
-            //if (urlStr.IndexOf("key=critters") > -1)
-            //    Console.WriteLine("IN");
+            if (urlStr.IndexOf("key=critters") > -1)
+                Console.WriteLine("IN");
             Regex javaTag = new Regex(JAVATAG,RegexOptions.IgnoreCase);
             if (urlStr[0] == '#' || urlStr == "/" || javaTag.IsMatch(urlStr))
                 return false;
