@@ -20,10 +20,10 @@ insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('新品');
 insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('特卖');
 insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('热卖');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1284);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1285);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1286);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1287);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1288);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1289);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,1290);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,63);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,64);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,65);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,66);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,67);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,68);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,69);
