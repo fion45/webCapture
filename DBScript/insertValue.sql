@@ -8,8 +8,8 @@ select ParCID,NameStr,Tag FROM FCStore.dbo.tb_category
 where FCStore.dbo.tb_category.CID > 
 (SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Categories])
 
-insert into [FCStore.Models.FCStoreDbContext].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date]) 
-select CID,BrandID,Title,Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date] FROM FCStore.dbo.tb_product
+insert into [FCStore.Models.FCStoreDbContext].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date],PVCount) 
+select CID,BrandID,Title,Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date],0 FROM FCStore.dbo.tb_product
 where FCStore.dbo.tb_product.PID > 
 (SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Products]) 
 AND FCStore.dbo.tb_product.BrandID <> -1 AND FCStore.dbo.tb_product.CID <> -1
@@ -27,3 +27,7 @@ insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,66);
 insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,67);
 insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,68);
 insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,69);
+
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('admin','admin','[ALL]');
+
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('1','1',1,'test@qq.com','');
