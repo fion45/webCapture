@@ -30,6 +30,8 @@ insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,69);
 
 insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('admin','10000','admin','ALL');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('fion','1','1',1,'test@qq.com','');
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('fion','1','1','test@qq.com','');
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('test','2','2','test@qq.com','');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values('fion','1','1',1,'test@qq.com','');
+insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,1);
+insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,2);
