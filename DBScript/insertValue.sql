@@ -9,7 +9,7 @@ where FCStore.dbo.tb_category.CID >
 (SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Categories])
 
 insert into [FCStore.Models.FCStoreDbContext].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date],PVCount) 
-select CID,BrandID,Title,Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date],0 FROM FCStore.dbo.tb_product
+select CID,BrandID,Title,Chose,Price,MarketPrice,1,Stock,Sale,ImgPath,Descript,Tag,[Date],0 FROM FCStore.dbo.tb_product
 where FCStore.dbo.tb_product.PID > 
 (SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Products]) 
 AND FCStore.dbo.tb_product.BrandID <> -1 AND FCStore.dbo.tb_product.CID <> -1
