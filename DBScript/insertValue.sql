@@ -32,8 +32,8 @@ insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('admin','10000','a
 insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('saler','500','saler','ALL');
 insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('client','100','client','ALL');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('fion','1','1','test@qq.com','');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('test','2','2','test@qq.com','');
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('fion','1','1','test@qq.com',-1,'');
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('test','2','2','test@qq.com',-1,'');
 
 insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,1);
 insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,2);
