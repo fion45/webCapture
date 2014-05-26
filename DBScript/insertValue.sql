@@ -38,12 +38,10 @@ insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('test','2','2','te
 insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,1);
 insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,2);
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Areas] Values(502,'中国','广东省','佛山市','禅城区',528000)
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',1)
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values(1,'城门头西路2号之2 803','18923230566',1)
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values(1,'城门头西路2号之2 803','18923230566',2)
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values(1,'城门头西路2号之2 803','18923230566',2)
-
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values(1,'城门头西路2号之2 803','18923230566',2)
+insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
