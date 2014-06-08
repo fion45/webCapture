@@ -1,47 +1,47 @@
-insert into [FCStore.Models.FCStoreDbContext].[dbo].[Brands](NameStr,Name2,Tag,CountryCode) 
+insert into [FCStoreWeb].[dbo].[Brands](NameStr,Name2,Tag,CountryCode) 
 select NameStr,Name2,Tag,0 FROM FCStore.dbo.tb_brand 
 where FCStore.dbo.tb_brand.BID > 
-(SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Brands])
+(SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Brands])
 
-insert into [FCStore.Models.FCStoreDbContext].[dbo].[Categories](ParCID,NameStr,Tag) 
+insert into [FCStoreWeb].[dbo].[Categories](ParCID,NameStr,Tag) 
 select ParCID,NameStr,Tag FROM FCStore.dbo.tb_category 
 where FCStore.dbo.tb_category.CID > 
-(SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Categories])
+(SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Categories])
 
-insert into [FCStore.Models.FCStoreDbContext].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date],PVCount) 
+insert into [FCStoreWeb].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,Descript,Tag,[Date],PVCount) 
 select CID,BrandID,Title,Chose,Price,MarketPrice,1,Stock,Sale,ImgPath,Descript,Tag,[Date],0 FROM FCStore.dbo.tb_product
 where FCStore.dbo.tb_product.PID > 
-(SELECT COUNT(*) FROM [FCStore.Models.FCStoreDbContext].[dbo].[Products]) 
+(SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Products]) 
 AND FCStore.dbo.tb_product.BrandID <> -1 AND FCStore.dbo.tb_product.CID <> -1
  Order by FCStore.dbo.tb_product.Tag
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('推荐');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('新品');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('特卖');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Columns] Values('热卖');
+insert [FCStoreWeb].[dbo].[Columns] Values('推荐');
+insert [FCStoreWeb].[dbo].[Columns] Values('新品');
+insert [FCStoreWeb].[dbo].[Columns] Values('特卖');
+insert [FCStoreWeb].[dbo].[Columns] Values('热卖');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,63);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,64);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,65);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,66);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,67);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,68);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[ColumnProducts] Values(1,69);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,63);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,64);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,65);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,66);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,67);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,68);
+insert [FCStoreWeb].[dbo].[ColumnProducts] Values(1,69);
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('admin','10000','admin','ALL');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('saler','500','saler','ALL');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Roles] Values('client','100','client','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('admin','10000','admin','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('saler','500','saler','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('client','100','client','ALL');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('fion','1','1','test@qq.com',NULL,'');
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Users] Values('test','2','2','test@qq.com',NULL,'');
+insert [FCStoreWeb].[dbo].[Users] Values('fion','1','1','test@qq.com',NULL,'');
+insert [FCStoreWeb].[dbo].[Users] Values('test','2','2','test@qq.com',NULL,'');
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,1);
-insert [FCStore.Models.FCStoreDbContext].[dbo].[RoleUsers] Values(1,2);
+insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,1);
+insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,2);
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',1)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',1)
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStore.Models.FCStoreDbContext].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
