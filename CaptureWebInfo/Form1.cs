@@ -25,9 +25,9 @@ namespace CaptureWebInfo
         private int mLVIndex = 0;
         private Configuration mConfig = null;
         private FileInfo mRegexFI = null;
-        private CategoryController mCatCon = new CategoryController();
-        private BrandController mBraCon = new BrandController();
-        private ProductController mProCon = new ProductController();
+        private CategoryController mCatCon = null;
+        private BrandController mBraCon = null;
+        private ProductController mProCon = null;
         private NetworkMonitor mNWMon = NetworkMonitor.GetInstance();
 
         //Test
@@ -42,18 +42,17 @@ namespace CaptureWebInfo
             cap.Enabled = false;
             mTimer.Interval = 1000;
             mTimer.Tick += mTimer_Tick;
+
+            mCatCon = new CategoryController();
+            mBraCon = new BrandController();
+            mProCon = new ProductController();
         }
 
         private void LoadConfig()
         {
-#if DEBUG
             string applicationName =
                 Environment.GetCommandLineArgs()[0];
             applicationName = applicationName.Replace(".vshost.", ".");
-#else
-             string applicationName =
-            Environment.GetCommandLineArgs()[0]+ ".exe";
-#endif
 
             string exePath = System.IO.Path.Combine(Environment.CurrentDirectory, applicationName);
             string rgxFPath = System.IO.Path.Combine(Environment.CurrentDirectory, "Content.rgx");
@@ -279,7 +278,7 @@ namespace CaptureWebInfo
                                 //获得牌子图片
                                 string srcStr = tmpG.Captures[i].Value;
                                 Analyzer.FillUrlString(ref srcStr, visitor.mUrl);
-                                string srcLoc = string.Format("\brand\\{0}.{1}", tmpG1.Captures[i], srcStr.Substring(srcStr.LastIndexOf('.') + 1));
+                                string srcLoc = string.Format("\\brand\\{0}.{1}", tmpG1.Captures[i], srcStr.Substring(srcStr.LastIndexOf('.') + 1));
                                 if (!File.Exists(Environment.CurrentDirectory + srcLoc))
                                     mSEOHelper.GetImg(srcStr, Environment.CurrentDirectory + srcLoc);
                                 //加载牌子
