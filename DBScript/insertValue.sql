@@ -41,10 +41,10 @@ insert [FCStoreWeb].[dbo].[Users] Values('test','2','222222','test@qq.com',NULL,
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,1);
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,2);
 
-insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',1)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',1)
 
-insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStoreWeb].[dbo].[Addresses] Values('test',NULL,'城门头西路2号之2 803','18923230566','528000',2)
+insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',2)
