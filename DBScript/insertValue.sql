@@ -35,8 +35,8 @@ insert [FCStoreWeb].[dbo].[Roles] Values('admin','10000','admin','ALL');
 insert [FCStoreWeb].[dbo].[Roles] Values('saler','500','saler','ALL');
 insert [FCStoreWeb].[dbo].[Roles] Values('client','100','client','ALL');
 
-insert [FCStoreWeb].[dbo].[Users] Values('fion','1','111111','test@qq.com',NULL,'',100);
-insert [FCStoreWeb].[dbo].[Users] Values('test','2','222222','test@qq.com',NULL,'',100);
+insert [FCStoreWeb].[dbo].[Users] Values('fion','1','111111','test@qq.com',0,NULL,'',100,NULL,NULL,NULL);
+insert [FCStoreWeb].[dbo].[Users] Values('test','2','222222','test@qq.com',0,NULL,'',100,NULL,NULL,NULL);
 
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,1);
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,2);
