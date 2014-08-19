@@ -181,7 +181,7 @@ namespace Controller
         /// <returns>数据</returns>
         public DataSet GetAll()
         {
-            return DBHelperSQL.RunProcedure("sp_" + _tablename + "_SelectAll", new SqlParameter[] { }, "ds");
+            return DBHelperSQL.RunProcedure("sp_" + _tablename + "_SelectAll", new SqlParameter[] {null }, "ds");
         }
 
         /// <summary>
