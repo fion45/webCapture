@@ -8,8 +8,8 @@ select ParCID,NameStr,Tag FROM FCStore.dbo.tb_category
 where FCStore.dbo.tb_category.CID > 
 (SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Categories])
 
-insert into [FCStoreWeb].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,PVCount,Descript,[Date],Tag) 
-select CID,BrandID,Title,Chose,Price,MarketPrice,1,Stock,Sale,ImgPath,0,Descript,[Date],Tag FROM FCStore.dbo.tb_product
+insert into [FCStoreWeb].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,PVCount,Descript,[Date],Tag,EvaluationStarCount) 
+select CID,BrandID,Title,Chose,Price,MarketPrice,1,Stock,Sale,ImgPath,0,Descript,[Date],Tag,10 FROM FCStore.dbo.tb_product
 where FCStore.dbo.tb_product.PID > 
 (SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Products]) 
 --AND FCStore.dbo.tb_product.BrandID <> -1 AND FCStore.dbo.tb_product.CID <> -1
