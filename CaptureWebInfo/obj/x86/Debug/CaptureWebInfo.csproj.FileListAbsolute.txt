@@ -30,4 +30,3 @@ F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\DBHelper.dll
 F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\Controller.pdb
 F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\Model.pdb
 F:\C#.NET\WebCapture\CaptureWebInfo\bin\Debug\DBHelper.pdb
-G:\C#net\CaptureWebInfo\CaptureWebInfo\CaptureWebInfo\bin\Debug\CaptureWebInfo.exe.config

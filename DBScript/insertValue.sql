@@ -29,9 +29,9 @@ insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,66,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,67,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,68,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,69,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,2000,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,510,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,1000,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,70,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,71,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(1,72,1,1,0);
 
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,63,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,64,1,1,0);
@@ -40,9 +40,9 @@ insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,66,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,67,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,68,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,69,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,2000,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,510,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,1000,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,70,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,71,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(2,72,1,1,0);
 
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,63,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,64,1,1,0);
@@ -51,9 +51,9 @@ insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,66,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,67,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,68,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,69,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,2000,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,510,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,1000,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,70,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,71,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(3,72,1,1,0);
 
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,63,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,64,1,1,0);
@@ -62,21 +62,25 @@ insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,66,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,67,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,68,1,1,0);
 insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,69,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,2000,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,510,1,1,0);
-insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,1000,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,70,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,71,1,1,0);
+insert [FCStoreWeb].[dbo].[ReColumnProducts] Values(4,72,1,1,0);
 
-insert [FCStoreWeb].[dbo].[Roles] Values('admin','10000','admin','ALL');
-insert [FCStoreWeb].[dbo].[Roles] Values('saler','500','saler','ALL');
-insert [FCStoreWeb].[dbo].[Roles] Values('client','100','client','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('admin','10000','系统管理员','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('foreign supplier','500','外国供货商','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('supplier','500','国内供货商','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('saler','500','销售人员','ALL');
+insert [FCStoreWeb].[dbo].[Roles] Values('client','100','客户','ALL');
 
-insert [FCStoreWeb].[dbo].[Users] Values('fion','fion','12348765','86945494@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-insert [FCStoreWeb].[dbo].[Users] Values('fion','1','111111','86945494@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-insert [FCStoreWeb].[dbo].[Users] Values('test','2','222222','test@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+insert [FCStoreWeb].[dbo].[Users] Values('fion','fion','12348765','86945494@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,NULL);
+insert [FCStoreWeb].[dbo].[Users] Values('fion','1','111111','86945494@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,NULL);
+insert [FCStoreWeb].[dbo].[Users] Values('test','2','222222','test@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,NULL);
+insert [FCStoreWeb].[dbo].[Users] Values('mawen','3','mawen','mawen@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL,'{Country:日本}');
 
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,1);
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,2);
 insert [FCStoreWeb].[dbo].[RoleUsers] Values(1,3);
+insert [FCStoreWeb].[dbo].[RoleUsers] Values(2,4);
 
 --insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',1)
 
@@ -98,10 +102,10 @@ insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/
 
 insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/5.jpg',5,'')
 
-insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,50,165,49)
+insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,50,11,49)
 insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,51,11,49)
 insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,52,20,60)
-insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,53,1,154)
-insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,54,1,154)
-insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,55,1,154)
-insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,50,165,49)
+insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,53,20,60)
+insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,54,20,60)
+insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,55,20,60)
+insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,50,20,49)
