@@ -31,6 +31,12 @@ namespace Model
             set;
         }
 
+        public string Img
+        {
+            get;
+            set;
+        }
+
         public Brand()
         {
         }

@@ -285,6 +285,7 @@ namespace CaptureWebInfo
                                 Brand brand = new Brand();
                                 brand.NameStr = tmpG2.Captures[i].Value.Trim();
                                 brand.Name2 = tmpG3.Captures[i].Value.Trim();
+                                brand.Img = srcLoc;
                                 brand.Tag = int.Parse(tmpG1.Value);
                                 if (mBraCon.AddToMemory(brand))
                                 {

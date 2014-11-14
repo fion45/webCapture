@@ -68,6 +68,7 @@ namespace Controller
                 {
                     mArr[index].NameStr = brand.NameStr;
                     mArr[index].Name2 = brand.Name2;
+                    mArr[index].Img = brand.Img;
                     result = Set(mArr[index]);
                 }
             }
