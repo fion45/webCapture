@@ -78,9 +78,9 @@ insert [FCStoreWeb].[dbo].[Users] Values('test','2','222222','test@qq.com',0,NUL
 insert [FCStoreWeb].[dbo].[Users] Values('mawen','3','mawen','mawen@qq.com',0,NULL,'',100,NULL,NULL,NULL,NULL,NULL);
 
 insert [FCStoreWeb].[dbo].[ReUserRoles] Values(1,1,'');
-insert [FCStoreWeb].[dbo].[ReUserRoles] Values(1,2,'{Country:泰国}');
+insert [FCStoreWeb].[dbo].[ReUserRoles] Values(1,2,'{"Country":"泰国"}');
 insert [FCStoreWeb].[dbo].[ReUserRoles] Values(1,3,'');
-insert [FCStoreWeb].[dbo].[ReUserRoles] Values(2,2,'{Country:日本}');
+insert [FCStoreWeb].[dbo].[ReUserRoles] Values(2,2,'{"Country":"日本"}');
 
 --insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',1)
 
