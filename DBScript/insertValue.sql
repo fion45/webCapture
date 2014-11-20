@@ -18,8 +18,8 @@ insert [FCStoreWeb].[dbo].[Categories] values(0,'未确定',999)
 update [FCStore].[dbo].[tb_product] set CID = (SELECT CID FROM [FCStoreWeb].[dbo].[Categories] WHERE NameStr = '未确定') where [FCStore].[dbo].[tb_product].CID NOT IN(SELECT CID FROM [FCStoreWeb].[dbo].[Categories])
 GO
 
-insert into [FCStoreWeb].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,PVCount,Descript,[Date],Tag,EvaluationStarCount) 
-select CID,BrandID,Title,Chose,Price,MarketPrice,1,Stock,Sale,ImgPath,0,Descript,[Date],Tag,10 FROM FCStore.dbo.tb_product
+insert into [FCStoreWeb].[dbo].[Products]([CID],[BID],[Title],Chose,Price,MarketPrice,Discount,Stock,Sale,ImgPath,PVCount,Descript,[Date],Tag,ShowTag,EvaluationStarCount) 
+select CID,BrandID,Title,Chose,Price,MarketPrice,1,Stock,Sale,ImgPath,0,Descript,[Date],Tag,1,10 FROM FCStore.dbo.tb_product
 where FCStore.dbo.tb_product.PID > 
 (SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Products]) 
 --AND FCStore.dbo.tb_product.BrandID <> -1 AND FCStore.dbo.tb_product.CID <> -1
