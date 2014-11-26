@@ -10,7 +10,7 @@ where FCStore.dbo.tb_category.CID >
 (SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Categories])
 GO
 
-insert [FCStoreWeb].[dbo].[Brands] values('未确定','未确定','',1,999,1)
+insert [FCStoreWeb].[dbo].[Brands] values('未确定','未确定','',1,999,1,1)
 update [FCStore].[dbo].[tb_product] set BrandID = (SELECT BID FROM [FCStoreWeb].[dbo].[Brands] WHERE NameStr = '未确定') where [FCStore].[dbo].[tb_product].BrandID NOT IN(SELECT BID FROM [FCStoreWeb].[dbo].[Brands])
 GO
 
