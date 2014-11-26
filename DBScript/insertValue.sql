@@ -1,20 +1,20 @@
-insert into [FCStoreWeb].[dbo].[Brands](NameStr,Name2,CountryCode,Tag,Important) 
-select NameStr,Name2,0,Tag,0 FROM FCStore.dbo.tb_brand 
+insert into [FCStoreWeb].[dbo].[Brands](NameStr,Name2,CountryCode,Tag,Important,IsShow) 
+select NameStr,Name2,0,Tag,0,1 FROM FCStore.dbo.tb_brand 
 where FCStore.dbo.tb_brand.BID > 
 (SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Brands])
 GO
 
-insert into [FCStoreWeb].[dbo].[Categories](ParCID,NameStr,Tag) 
-select ParCID,NameStr,Tag FROM FCStore.dbo.tb_category 
+insert into [FCStoreWeb].[dbo].[Categories](ParCID,NameStr,Tag,IsShow) 
+select ParCID,NameStr,Tag,1 FROM FCStore.dbo.tb_category 
 where FCStore.dbo.tb_category.CID > 
 (SELECT COUNT(*) FROM [FCStoreWeb].[dbo].[Categories])
 GO
 
-insert [FCStoreWeb].[dbo].[Brands] values('未确定','未确定','',1,999,0)
+insert [FCStoreWeb].[dbo].[Brands] values('未确定','未确定','',1,999,1)
 update [FCStore].[dbo].[tb_product] set BrandID = (SELECT BID FROM [FCStoreWeb].[dbo].[Brands] WHERE NameStr = '未确定') where [FCStore].[dbo].[tb_product].BrandID NOT IN(SELECT BID FROM [FCStoreWeb].[dbo].[Brands])
 GO
 
-insert [FCStoreWeb].[dbo].[Categories] values(0,'未确定',999)
+insert [FCStoreWeb].[dbo].[Categories] values(0,'未确定',999,1)
 update [FCStore].[dbo].[tb_product] set CID = (SELECT CID FROM [FCStoreWeb].[dbo].[Categories] WHERE NameStr = '未确定') where [FCStore].[dbo].[tb_product].CID NOT IN(SELECT CID FROM [FCStoreWeb].[dbo].[Categories])
 GO
 
@@ -27,10 +27,10 @@ AND FCStore.dbo.tb_product.BrandID > 0 AND FCStore.dbo.tb_product.CID > 0
  Order by FCStore.dbo.tb_product.Tag
 GO
 
-insert [FCStoreWeb].[dbo].[Columns] Values('限时抢购','正品+ 便宜','极速到货，免运费');
-insert [FCStoreWeb].[dbo].[Columns] Values('新品上市','最新+ 最潮','把握脉搏,紧跟潮流,走在时代尖端');
-insert [FCStoreWeb].[dbo].[Columns] Values('团购优惠','优质+ 省钱','越多人买，越便宜');
-insert [FCStoreWeb].[dbo].[Columns] Values('健康宝宝','安全+ 放心','极速到货，免运费');
+insert [FCStoreWeb].[dbo].[Columns] Values('限时抢购','正品+ 便宜','极速到货，免运费',1);
+insert [FCStoreWeb].[dbo].[Columns] Values('新品上市','最新+ 最潮','把握脉搏,紧跟潮流,走在时代尖端',1);
+insert [FCStoreWeb].[dbo].[Columns] Values('团购优惠','优质+ 省钱','越多人买，越便宜',1);
+insert [FCStoreWeb].[dbo].[Columns] Values('健康宝宝','安全+ 放心','极速到货，免运费',1);
 GO
 
 
@@ -106,17 +106,17 @@ GO
 
 --insert [FCStoreWeb].[dbo].[Addresses] Values('test',1,'城门头西路2号之2 803','18923230566','528000',2)
 
-insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/0.jpg',0,'')
+insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/0.jpg',0,'',1)
 
-insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/1.jpg',1,'')
+insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/1.jpg',1,'',1)
 
-insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/2.jpg',2,'')
+insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/2.jpg',2,'',1)
 
-insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/3.jpg',3,'')
+insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/3.jpg',3,'',1)
 
-insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/4.jpg',4,'')
+insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/4.jpg',4,'',1)
 
-insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/5.jpg',5,'')
+insert [FCStoreWeb].[dbo].[BannerItems] Values('浪漫七夕','浪漫七夕', '/picture/banner/5.jpg',5,'',1)
 GO
 
 insert [FCStoreWeb].[dbo].[PushInfoes] Values('2014-07-31',1,50,11,49)
